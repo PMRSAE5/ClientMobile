@@ -1,35 +1,83 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
+  ImageBackground,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { login } from "../services/api";
+import { UserContext } from "../UserContext"; // Import du UserContext
 
-export default function Connexion({ navigation }) {
-  const [email, setEmail] = useState("");
+export default function Connexion({ navigation, onLoginSuccess }) {
+  const [mail, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setUser } = useContext(UserContext); // Récupère le setter de l'utilisateur
+
+  const handleLogin = async () => {
+    console.log("Début de la méthode handleLogin.");
+
+    if (!mail || !password) {
+      Alert.alert("Erreur", "Veuillez remplir tous les champs.");
+      return;
+    }
+
+    try {
+      console.log("Envoi des données au serveur :", { mail, password });
+
+      const result = await login(mail, password);
+      console.log("Résultat brut de l'API :", result);
+
+      if (!result.user) {
+        console.log("Réponse API sans utilisateur :", result);
+        throw new Error(result.error || "Données utilisateur non disponibles.");
+      }
+
+      // Met à jour le contexte utilisateur
+      setUser(result.user);
+      console.log("Utilisateur trouvé :", result.user);
+      console.log("Utilisateur mis à jour dans le contexte :", result.user);
+
+      // Succès
+      Alert.alert("Succès", `Bienvenue, ${result.user.name || "Utilisateur"}!`);
+
+      // Appelle onLoginSuccess si défini
+      if (onLoginSuccess) {
+        console.log("Appel de onLoginSuccess...");
+        onLoginSuccess();
+      }
+
+      console.log("Redirection vers la page Accueil...");
+      navigation.navigate("Accueil"); // Navigue vers "Accueil"
+    } catch (error) {
+      console.error("Erreur lors de la connexion :", error);
+      Alert.alert("Erreur", error.message || "Échec de la connexion.");
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {/* Titre */}
+      {/* Ajout de l'image */}
+      <ImageBackground
+        source={require("../assets/BackLogin.png")} // Image locale
+        style={styles.logo}
+      />
+
       <Text style={styles.title}>Connexion</Text>
 
-      {/* Formulaire */}
       <View style={styles.form}>
-        {/* Adresse Email */}
         <Text style={styles.label}>Adresse mail</Text>
         <TextInput
           style={styles.input}
           placeholder="Email"
           keyboardType="email-address"
-          value={email}
+          value={mail}
           onChangeText={setEmail}
         />
 
-        {/* Mot de passe */}
         <Text style={styles.label}>Mot de passe</Text>
         <TextInput
           style={styles.input}
@@ -45,7 +93,7 @@ export default function Connexion({ navigation }) {
         </TouchableOpacity>
 
         {/* Bouton Connexion */}
-        <TouchableOpacity style={styles.buttonPrimary}>
+        <TouchableOpacity style={styles.buttonPrimary} onPress={handleLogin}>
           <Text style={styles.buttonPrimaryText}>Se connecter</Text>
         </TouchableOpacity>
       </View>
@@ -101,8 +149,14 @@ export default function Connexion({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  logo: {
+    width: 400,
+    height: 400,
+    marginBottom: 10,
     flex: 1,
+  },
+  container: {
+    marginTop: 120,
     backgroundColor: "#f3f4f6",
     justifyContent: "center",
     alignItems: "center",
