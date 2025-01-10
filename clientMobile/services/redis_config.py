@@ -2,7 +2,7 @@ import redis
 import json
 
 # Connexion à Redis
-r = redis.Redis(host='10.10.53.76', port=6379, db=0, password='kaka')
+r = redis.Redis(host='192.168.1.184', port=6379, db=0, password='kaka')
 
 # Supprimer la clé 'Trajet' si elle existe
 try:

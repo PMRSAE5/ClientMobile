@@ -33,4 +33,18 @@ export const login = async (mail, password) => {
   }
 };
 
-export default api;
+export const checkReservation = async (num_reservation, base) => {
+  try {
+    const response = await api.post("/traj/checkReservation", {
+      num_reservation: num_reservation,
+      base: base,
+    });
+    return response.data;
+  } catch (error) {
+    throw (
+      error.response?.data || {
+        message: "Erreur lors de la vérification de la réservation.",
+      }
+    );
+  }
+};

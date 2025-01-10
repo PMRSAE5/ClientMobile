@@ -19,7 +19,7 @@ export default function NavBar() {
       {/* Add */}
       <TouchableOpacity
         style={styles.navButton}
-        onPress={() => navigation.navigate("Réservation")}
+        onPress={() => navigation.navigate("Reservation")}
       >
         <Icon name="plus-circle" size={24} color="#fff" />
         <Text style={styles.navText}>Réserver</Text>

@@ -10,7 +10,8 @@ import Accueil from "./components/Accueil.jsx";
 import NavBar from "./components/Navbar.jsx";
 import Settings from "./components/Settings.jsx";
 import Profile from "./components/Profile.jsx";
-import Réservation from "./components/Réservation.jsx";
+import Reservation from "./components/Reservation.jsx";
+import Reservation2 from "./components/Reservation2.jsx";
 
 const Stack = createStackNavigator();
 
@@ -78,8 +79,14 @@ export default function App() {
 
           {/* Réservation */}
           <Stack.Screen
-            name="Réservation"
-            component={Réservation}
+            name="Reservation"
+            component={Reservation}
+            options={{ headerShown: false }}
+          />
+          {/* 2eme page de Réservation */}
+          <Stack.Screen
+            name="Reservation2"
+            component={Reservation2}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
