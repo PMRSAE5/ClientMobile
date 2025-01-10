@@ -12,7 +12,8 @@ import Settings from "./components/Settings.jsx";
 import Profile from "./components/Profile.jsx";
 import Reservation from "./components/Reservation.jsx";
 import Reservation2 from "./components/Reservation2.jsx";
-
+import SplashScreen from "./components/SplashScreen.jsx";
+import * as Font from "expo-font";
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -21,7 +22,12 @@ export default function App() {
   return (
     <UserProvider>
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName="SplashScreen">
+          <Stack.Screen
+            name="SplashScreen"
+            component={SplashScreen}
+            options={{ headerShown: false }}
+          />
           {/* PageStart */}
           <Stack.Screen
             name="PageStart"

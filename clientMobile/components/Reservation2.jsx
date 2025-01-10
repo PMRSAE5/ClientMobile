@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -8,8 +8,12 @@ import {
   Alert,
   ScrollView,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../UserContext"; // Import du contexte utilisateur
 
 export default function Reservation2() {
+  const navigation = useNavigation();
+  const { setUser } = useContext(UserContext); // Utilisation du contexte pour définir les infos utilisateur
   const [hasCompanion, setHasCompanion] = useState(null); // Oui/Non pour accompagnateur
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -39,9 +43,6 @@ export default function Reservation2() {
       wheelchair,
       additionalInfo,
     };
-
-    console.log("Données soumises :", formData);
-    Alert.alert("Succès", "Votre demande d'assistance a été enregistrée.");
   };
 
   return (

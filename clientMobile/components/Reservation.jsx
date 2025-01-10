@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { checkReservation } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native"; // Import supplémentaire
 
 export default function Reservation() {
   const navigation = useNavigation();
@@ -104,7 +105,7 @@ export default function Reservation() {
             onPress={() => {
               Alert.alert("Confirmation", "Votre billet a été confirmé !");
               console.log("Redirection vers Reservation2...");
-              navigation.navigate("Reservation2");
+              navigation.navigate("Reservation2", { billet });
             }}
           >
             <Text style={styles.confirmButtonText}>Confirmer</Text>
