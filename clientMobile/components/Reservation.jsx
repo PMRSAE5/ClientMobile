@@ -105,7 +105,15 @@ export default function Reservation() {
             onPress={() => {
               Alert.alert("Confirmation", "Votre billet a été confirmé !");
               console.log("Redirection vers Reservation2...");
-              navigation.navigate("Reservation2", { billet });
+
+              // Naviguer vers Reservation2 avec les infos du billet
+              navigation.navigate("Reservation2", {
+                billet: {
+                  num_reservation: billet.num_reservation,
+                  lieu_depart: billet.lieu_depart,
+                  lieu_arrivee: billet.lieu_arrivee,
+                },
+              });
             }}
           >
             <Text style={styles.confirmButtonText}>Confirmer</Text>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://10.0.2.2:3000";
+const API_BASE_URL = "http://172.20.10.2:3000";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -45,6 +45,31 @@ export const checkReservation = async (num_reservation, base) => {
       error.response?.data || {
         message: "Erreur lors de la vérification de la réservation.",
       }
+    );
+  }
+};
+
+export const update = async (updatedData) => {
+  try {
+    const response = await api.put("/users/update", updatedData);
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la requête de mise à jour :", error);
+
+    if (error.response) {
+      console.error(
+        "Erreur réponse API :",
+        error.response.status,
+        error.response.data
+      );
+    } else if (error.request) {
+      console.error("Erreur réseau : aucune réponse reçue.");
+    } else {
+      console.error("Erreur inconnue :", error.message);
+    }
+
+    throw (
+      error.response?.data || { message: "Erreur de connexion au serveur." }
     );
   }
 };

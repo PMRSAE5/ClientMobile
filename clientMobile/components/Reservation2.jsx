@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,12 +9,12 @@ import {
   ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { UserContext } from "../UserContext"; // Import du contexte utilisateur
+import { UserContext } from "../UserContext";
 
-export default function Reservation2() {
+export default function Reservation2({ route }) {
   const navigation = useNavigation();
-  const { setUser } = useContext(UserContext); // Utilisation du contexte pour définir les infos utilisateur
-  const [hasCompanion, setHasCompanion] = useState(null); // Oui/Non pour accompagnateur
+  const { user, setUser } = useContext(UserContext); // Utilisation du contexte utilisateur
+  const [hasCompanion, setHasCompanion] = useState(null);
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [phone, setPhone] = useState("");
@@ -26,23 +26,32 @@ export default function Reservation2() {
     Emprunt: false,
   });
   const [additionalInfo, setAdditionalInfo] = useState("");
+  const { billet } = route.params || {}; // Récupérer les données du billet
+
+  useEffect(() => {
+    console.log("Billet dans Reservation2 :", user?.billet);
+  }, [user]);
 
   const handleSubmit = () => {
-    if (hasCompanion && (!name || !surname || !phone || !email)) {
-      Alert.alert("Erreur", "Veuillez remplir tous les champs obligatoires.");
-      return;
-    }
-
     const formData = {
       hasCompanion,
-      name,
-      surname,
-      phone,
-      email,
       numBags,
       wheelchair,
       additionalInfo,
     };
+
+    // Inclure les données de l'accompagnateur si elles sont remplies
+    if (hasCompanion) {
+      formData.name = name;
+      formData.surname = surname;
+      formData.phone = phone;
+      formData.email = email;
+    }
+
+    console.log("FormData soumis :", formData);
+
+    // Naviguer vers Reservation3 avec billet + formData
+    navigation.navigate("Reservation3", { billet, formData });
   };
 
   return (

@@ -12,8 +12,9 @@ import Settings from "./components/Settings.jsx";
 import Profile from "./components/Profile.jsx";
 import Reservation from "./components/Reservation.jsx";
 import Reservation2 from "./components/Reservation2.jsx";
+import Reservation3 from "./components/Reservation3.jsx";
 import SplashScreen from "./components/SplashScreen.jsx";
-import * as Font from "expo-font";
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -93,6 +94,12 @@ export default function App() {
           <Stack.Screen
             name="Reservation2"
             component={Reservation2}
+            options={{ headerShown: false }}
+          />
+
+          <Stack.Screen
+            name="Reservation3"
+            component={Reservation3}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
