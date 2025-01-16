@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { checkReservation } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
-import { useRoute } from "@react-navigation/native"; // Import supplémentaire
 
 export default function Reservation() {
   const navigation = useNavigation();

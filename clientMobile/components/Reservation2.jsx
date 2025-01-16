@@ -33,25 +33,36 @@ export default function Reservation2({ route }) {
   }, [user]);
 
   const handleSubmit = () => {
-    const formData = {
-      hasCompanion,
-      numBags,
-      wheelchair,
-      additionalInfo,
-    };
-
-    // Inclure les données de l'accompagnateur si elles sont remplies
-    if (hasCompanion) {
-      formData.name = name;
-      formData.surname = surname;
-      formData.phone = phone;
-      formData.email = email;
+    if (!numBags) {
+      Alert.alert("Erreur", "Veuillez spécifier le nombre de bagages.");
+      return;
     }
 
-    console.log("FormData soumis :", formData);
+    // Ajouter les données du formulaire au billet existant
+    const updatedBillet = {
+      ...billet,
+      name: user?.name,
+      surname: user?.surname,
+      phone: user?.num,
+      email: user?.mail,
+      numBags,
+      additionalInfo,
+      wheelchair,
+      hasCompanion,
+      companion: hasCompanion
+        ? {
+            name,
+            surname,
+            phone,
+            email,
+          }
+        : null, // Si l'utilisateur a un accompagnateur, inclure ses informations
+    };
 
-    // Naviguer vers Reservation3 avec billet + formData
-    navigation.navigate("Reservation3", { billet, formData });
+    console.log("Billet mis à jour :", updatedBillet);
+
+    // Naviguer vers Reservation3 avec le billet mis à jour
+    navigation.navigate("Reservation3", { billet: updatedBillet });
   };
 
   return (

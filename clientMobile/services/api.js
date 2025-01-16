@@ -33,6 +33,25 @@ export const login = async (mail, password) => {
   }
 };
 
+export const addBilletToRedis = async (billet) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/reservation/addToRedis`,
+      {
+        billet,
+      }
+    );
+    console.log("Réponse de l'API :", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Erreur lors de l'envoi du billet à Redis :",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || { message: "Erreur inconnue" };
+  }
+};
+
 export const checkReservation = async (num_reservation, base) => {
   try {
     const response = await api.post("/traj/checkReservation", {

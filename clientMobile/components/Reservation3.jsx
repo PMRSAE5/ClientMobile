@@ -2,12 +2,13 @@ import React, { useContext, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { UserContext } from "../UserContext";
 import QRCode from "react-native-qrcode-svg";
+import { addBilletToRedis } from "../services/api";
 
 const Reservation3 = ({ route, navigation }) => {
-  const { billet, formData } = route.params || {};
+  const { billet } = route.params || {};
   const { user } = useContext(UserContext);
 
-  if (!billet || !formData) {
+  if (!billet) {
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>Erreur : Données manquantes.</Text>
@@ -23,7 +24,7 @@ const Reservation3 = ({ route, navigation }) => {
 
   console.log("=== Données reçues dans Reservation3 ===");
   console.log("Billet :", billet);
-  console.log("FormData :", formData);
+
   console.log("Utilisateur :", user);
 
   // Contenu du QR Code
@@ -33,12 +34,33 @@ const Reservation3 = ({ route, navigation }) => {
     reservation: billet?.num_reservation,
     depart: billet?.lieu_depart,
     arrivee: billet?.lieu_arrivee,
-    bagages: formData?.numBags || "0",
+    bagages: billet?.numBags || "0",
     fauteuilRoulant:
-      Object.keys(formData?.wheelchair || {})
-        .filter((key) => formData?.wheelchair[key])
+      Object.keys(billet?.wheelchair || {})
+        .filter((key) => billet?.wheelchair[key])
         .join(", ") || "Non",
   });
+
+  const handleConfirm = async () => {
+    try {
+      console.log("Tentative d'ajout du billet à Redis :", billet);
+      const response = await addBilletToRedis(billet);
+      console.log("Réponse après ajout à Redis :", response);
+
+      Alert.alert(
+        "Confirmation",
+        "Votre réservation a été confirmée et ajoutée à Redis avec succès."
+      );
+
+      // Naviguer ou effectuer une autre action
+    } catch (error) {
+      console.error("Erreur lors de l'ajout du billet à Redis :", error);
+      Alert.alert(
+        "Erreur",
+        "Une erreur est survenue lors de l'ajout à Redis. Veuillez réessayer."
+      );
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -49,6 +71,10 @@ const Reservation3 = ({ route, navigation }) => {
         <Text style={styles.value}>{user?.name || "Non renseigné"}</Text>
         <Text style={styles.label}>Prénom :</Text>
         <Text style={styles.value}>{user?.surname || "Non renseigné"}</Text>
+        <Text style={styles.label}>Phone:</Text>
+        <Text style={styles.value}>{user?.num || "Non renseigné"}</Text>
+        <Text style={styles.label}>Prénom :</Text>
+        <Text style={styles.value}>{user?.mail || "Non renseigné"}</Text>
       </View>
 
       {/* Détails du billet */}
@@ -64,30 +90,30 @@ const Reservation3 = ({ route, navigation }) => {
       {/* Détails supplémentaires */}
       <View style={styles.section}>
         <Text style={styles.label}>Informations Personnelles</Text>
-        <Text>Nombre de Bagages : {formData?.numBags || "Non spécifié"}</Text>
+        <Text>Nombre de Bagages : {billet.numBags || "Non spécifié"}</Text>
         <Text>
           Fauteuil Roulant :
-          {Object.keys(formData?.wheelchair || {})
-            .filter((key) => formData?.wheelchair[key])
+          {Object.keys(billet.wheelchair || {})
+            .filter((key) => billet.wheelchair[key])
             .join(", ") || "Non"}
         </Text>
         <Text>
           Informations Supplémentaires :{" "}
-          {formData?.additionalInfo || "Non spécifié"}
+          {billet.additionalInfo || "Non spécifié"}
         </Text>
       </View>
 
       <View style={styles.section}>
         <Text style={styles.label}>
           Données de l'accompagnateur :{" "}
-          {formData?.hasCompanion ? "Oui" : "Pas d'accompagnateur"}
+          {billet.hasCompanion ? "Oui" : "Pas d'accompagnateur"}
         </Text>
-        {formData?.hasCompanion && (
+        {billet.hasCompanion && (
           <>
-            <Text>Nom : {formData?.name}</Text>
-            <Text>Prénom : {formData?.surname}</Text>
-            <Text>Téléphone : {formData?.phone}</Text>
-            <Text>Email : {formData?.email}</Text>
+            <Text>Nom : {billet.name}</Text>
+            <Text>Prénom : {billet.surname}</Text>
+            <Text>Téléphone : {billet.phone}</Text>
+            <Text>Email : {billet.email}</Text>
           </>
         )}
       </View>
@@ -95,6 +121,11 @@ const Reservation3 = ({ route, navigation }) => {
         <Text style={styles.label}>QR Code de la Réservation :</Text>
         <QRCode value={qrData} size={200} />
       </View>
+
+      {/* Bouton pour confirmer */}
+      <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
+        <Text style={styles.confirmButtonText}>Confirmer la Réservation</Text>
+      </TouchableOpacity>
     </View>
   );
 };
