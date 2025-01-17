@@ -27,19 +27,23 @@ const Reservation3 = ({ route, navigation }) => {
 
   console.log("Utilisateur :", user);
 
-  // Contenu du QR Code
-  const qrData = JSON.stringify({
-    nom: user?.name,
-    prenom: user?.surname,
-    reservation: billet?.num_reservation,
-    depart: billet?.lieu_depart,
-    arrivee: billet?.lieu_arrivee,
-    bagages: billet?.numBags || "0",
-    fauteuilRoulant:
-      Object.keys(billet?.wheelchair || {})
-        .filter((key) => billet?.wheelchair[key])
-        .join(", ") || "Non",
-  });
+  const qrData = `https://pmrsae5.github.io/PageQRCode/?nom=${encodeURIComponent(
+    user?.name || "Non renseigné"
+  )}&prenom=${encodeURIComponent(
+    user?.surname || "Non renseigné"
+  )}&reservation=${encodeURIComponent(
+    billet?.num_reservation || "Non renseigné"
+  )}&depart=${encodeURIComponent(
+    billet?.lieu_depart || "Non renseigné"
+  )}&arrivee=${encodeURIComponent(
+    billet?.lieu_arrivee || "Non renseigné"
+  )}&bagages=${encodeURIComponent(
+    billet?.numBags || "0"
+  )}&fauteuilRoulant=${encodeURIComponent(
+    Object.keys(billet?.wheelchair || {})
+      .filter((key) => billet?.wheelchair[key])
+      .join(", ") || "Non"
+  )}`;
 
   const handleConfirm = async () => {
     try {
@@ -117,8 +121,8 @@ const Reservation3 = ({ route, navigation }) => {
           </>
         )}
       </View>
-      <View style={styles.section}>
-        <Text style={styles.label}>QR Code de la Réservation :</Text>
+      <View style={styles.qrSection}>
+        <Text style={styles.label}>QR Code :</Text>
         <QRCode value={qrData} size={200} />
       </View>
 
