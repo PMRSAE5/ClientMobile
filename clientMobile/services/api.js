@@ -35,12 +35,20 @@ export const login = async (mail, password) => {
 
 export const addBilletToRedis = async (billet) => {
   try {
-    const response = await axios.post(
-      `${API_BASE_URL}/reservation/addToRedis`,
-      {
-        billet,
-      }
-    );
+    billet.bagages = billet.bagages.map((bagage) => ({
+      weight: bagage.weight,
+      description: bagage.description,
+    }));
+
+    // Encodage UTF-8 des données
+    const encodedBillet = Buffer.from(
+      JSON.stringify(billet),
+      "utf-8"
+    ).toString();
+
+    const response = await axios.post(`/reservation/addToRedis`, {
+      billet: encodedBillet, // Envoie le billet encodé en UTF-8
+    });
     console.log("Réponse de l'API :", response.data);
     return response.data;
   } catch (error) {

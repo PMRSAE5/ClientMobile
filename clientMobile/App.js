@@ -14,6 +14,8 @@ import Reservation from "./components/Reservation.jsx";
 import Reservation2 from "./components/Reservation2.jsx";
 import Reservation3 from "./components/Reservation3.jsx";
 import SplashScreen from "./components/SplashScreen.jsx";
+import BagageDetails from "./components/BagageDetails.jsx";
+import ConfirmationPage from "./components/ConfirmationPage.jsx";
 
 const Stack = createStackNavigator();
 
@@ -97,9 +99,23 @@ export default function App() {
             options={{ headerShown: false }}
           />
 
+          {/* Détails des bagages */}
+          <Stack.Screen
+            name="BagageDetails"
+            component={BagageDetails}
+            options={{ headerShown: false }}
+          />
+
           <Stack.Screen
             name="Reservation3"
             component={Reservation3}
+            options={{ headerShown: false }}
+          />
+
+          {/* Page de confirmation */}
+          <Stack.Screen
+            name="Confirmation"
+            component={ConfirmationPage}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

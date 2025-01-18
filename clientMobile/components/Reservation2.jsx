@@ -62,7 +62,7 @@ export default function Reservation2({ route }) {
     console.log("Billet mis à jour :", updatedBillet);
 
     // Naviguer vers Reservation3 avec le billet mis à jour
-    navigation.navigate("Reservation3", { billet: updatedBillet });
+    navigation.navigate("BagageDetails", { billet: updatedBillet });
   };
 
   return (
