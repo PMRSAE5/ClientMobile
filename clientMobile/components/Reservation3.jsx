@@ -152,6 +152,7 @@ const Reservation3 = ({ route, navigation }) => {
             {billet.bagages.map((bagage, index) => (
               <View key={index} style={styles.bagageContainer}>
                 <Text style={styles.bagageTitle}>Bagage {index + 1}</Text>
+                <Text>ID Bagage : {bagage.id_bagage}</Text>
                 <Text>Poids : {bagage.weight} kg</Text>
                 <Text>Description : {bagage.description}</Text>
                 {bagage.photo && (
@@ -163,6 +164,7 @@ const Reservation3 = ({ route, navigation }) => {
                 <Text>QR Code :</Text>
                 <QRCode
                   value={JSON.stringify({
+                    id_bagage: bagage.id_bagage,
                     poids: bagage.weight,
                     description: bagage.description,
                     photo: bagage.photo,

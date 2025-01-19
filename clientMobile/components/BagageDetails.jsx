@@ -19,6 +19,10 @@ const BagageDetails = ({ route, navigation }) => {
     description: "",
   });
 
+  const generateUniqueId = () => {
+    return `id_${Math.random().toString(36).substr(2, 9)}`;
+  };
+
   const handleAddBagage = () => {
     if (!bagageDetails.weight || !bagageDetails.description) {
       Alert.alert(
@@ -36,6 +40,7 @@ const BagageDetails = ({ route, navigation }) => {
     }
 
     const newBagage = {
+      id_bagage: generateUniqueId(),
       weight: bagageDetails.weight,
       description: bagageDetails.description,
     };
