@@ -10,7 +10,7 @@ export const login = async (mail, password) => {
   try {
     console.log("Tentative de connexion à l'API avec :", { mail, password });
     const response = await api.post("/users/userLog", { mail, password });
-    console.log("Réponse reçue de l'API :", response.data); // Ajoute ce log
+    console.log("Réponse reçue de l'API :", response.data);
     return response.data;
   } catch (error) {
     console.error("Erreur lors de la requête à l'API :", error);

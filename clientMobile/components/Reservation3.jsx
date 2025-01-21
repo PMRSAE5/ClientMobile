@@ -163,12 +163,9 @@ const Reservation3 = ({ route, navigation }) => {
                 )}
                 <Text>QR Code :</Text>
                 <QRCode
-                  value={JSON.stringify({
-                    id_bagage: bagage.id_bagage,
-                    poids: bagage.weight,
-                    description: bagage.description,
-                    photo: bagage.photo,
-                  })}
+                  value={`https://pmrsae5.github.io/PageQRCode/BagageDetails.html?poids=${encodeURIComponent(
+                    bagage.weight
+                  )}&description=${encodeURIComponent(bagage.description)}`}
                   size={100}
                 />
               </View>

@@ -7,7 +7,21 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  ImageBackground,
+  Modal,
 } from "react-native";
+import {
+  useFonts,
+  Raleway_100Thin,
+  Raleway_200ExtraLight,
+  Raleway_300Light,
+  Raleway_400Regular,
+  Raleway_500Medium,
+  Raleway_600SemiBold,
+  Raleway_700Bold,
+  Raleway_800ExtraBold,
+  Raleway_900Black,
+} from "@expo-google-fonts/raleway";
 
 const API_BASE_URL = "http://172.20.10.2:3000";
 
@@ -23,12 +37,36 @@ export default function Signup({ navigation }) {
     password: "",
     contact_mail: "",
     contact_num: "",
-    note: "",
+  });
+
+  const [showDropdown, setShowDropdown] = useState(false); // Correction ici
+
+  useFonts({
+    RalewayRegular: Raleway_400Regular,
+    RalewayBold: Raleway_700Bold,
+    RalewayExtraBold: Raleway_800ExtraBold,
+    RalewayBlack: Raleway_900Black,
   });
 
   const handleChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
   };
+
+  const handicapOptions = [
+    { label: "BLND : Malvoyant ou non voyant", value: "1" },
+    { label: "DEAF : Malentendant ou sourd", value: "2" },
+    {
+      label: "DPNA : Déficience Intellectuelle ou comportementale",
+      value: "3",
+    },
+    {
+      label: "WCHR : Besoin de fauteuil roulant pour les déplacements",
+      value: "4",
+    },
+    { label: "WCHS : Besoin d'aide pour tout déplacement", value: "5" },
+    { label: "WCHC : Assistance complète nécessaire", value: "6" },
+    { label: "MAAS : Assistance spécifique", value: "7" },
+  ];
 
   const handleSubmit = async () => {
     try {
@@ -55,6 +93,11 @@ export default function Signup({ navigation }) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <ImageBackground
+        source={require("../assets/Inscription.png")}
+        style={styles.logo}
+      />
+
       <Text style={styles.title}>S'inscrire</Text>
 
       {/* Civilité */}
@@ -99,41 +142,46 @@ export default function Signup({ navigation }) {
         </View>
       </View>
 
-      {/* Adresse e-mail et Téléphone */}
-      <View style={styles.row}>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Adresse e-mail</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            keyboardType="email-address"
-            value={formData.mail}
-            onChangeText={(value) => handleChange("mail", value)}
-          />
-        </View>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Téléphone</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Téléphone"
-            keyboardType="phone-pad"
-            value={formData.num}
-            onChangeText={(value) => handleChange("num", value)}
-          />
-        </View>
-      </View>
-
       {/* Handicap et Date de naissance */}
       <View style={styles.row}>
         <View style={styles.inputWrapper}>
           <Text style={styles.label}>Handicap</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Handicap (ex: Fauteuil)"
-            value={formData.handicap}
-            onChangeText={(value) => handleChange("handicap", value)}
-          />
+          <TouchableOpacity
+            style={[styles.input, styles.dropdown]}
+            onPress={() => setShowDropdown(true)}
+          >
+            <Text style={styles.dropdownText}>
+              {formData.handicap || "Sélectionner un handicap"}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Modal pour afficher les choix */}
+          <Modal visible={showDropdown} transparent animationType="fade">
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContent}>
+                {handicapOptions.map((option, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.option}
+                    onPress={() => {
+                      handleChange("handicap", option.label);
+                      setShowDropdown(false);
+                    }}
+                  >
+                    <Text>{option.label}</Text>
+                  </TouchableOpacity>
+                ))}
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setShowDropdown(false)}
+                >
+                  <Text style={styles.closeButtonText}>Fermer</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </View>
+
         <View style={styles.inputWrapper}>
           <Text style={styles.label}>Date anniversaire</Text>
           <TextInput
@@ -207,27 +255,35 @@ export default function Signup({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  logo: {
+    width: 600,
+    height: 600,
+    flex: 4,
+    marginTop: 80,
+    marginLeft: -100,
+    position: "absolute",
+  },
   background: {
     flex: 1,
     resizeMode: "cover",
   },
   container: {
-    flexGrow: 1,
     paddingHorizontal: 15,
     paddingVertical: 120,
-    backgroundColor: "#f3f4f6",
   },
   title: {
-    fontSize: 24,
+    fontFamily: "RalewayExtraBold",
     fontWeight: "bold",
-    color: "#007bff",
+    fontSize: 42,
+    color: "#5895D6",
     marginBottom: 20,
     textAlign: "center",
   },
   label: {
+    fontFamily: "RalewayExtraBold",
     fontSize: 16,
     fontWeight: "bold",
-    color: "#555",
+    color: "#000",
     marginBottom: 5,
   },
   input: {
@@ -246,6 +302,38 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 10,
   },
+  dropdown: {
+    justifyContent: "center",
+    paddingVertical: 10,
+  },
+  dropdownText: {
+    color: "#555",
+    opacity: 0.3,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    width: "80%",
+    borderRadius: 10,
+    padding: 20,
+  },
+  option: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  closeButton: {
+    marginTop: 10,
+    alignItems: "center",
+  },
+  closeButtonText: {
+    color: "red",
+    fontWeight: "bold",
+  },
   radioGroup: {
     flexDirection: "row",
     marginBottom: 15,
@@ -260,11 +348,11 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: "#007bff",
+    borderColor: "#5895D6",
     marginRight: 5,
   },
   radioSelected: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#5895D6",
   },
   checkboxContainer: {
     flexDirection: "row",
@@ -272,17 +360,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   linkText: {
-    color: "#007bff",
+    color: "#5895D6",
     textDecorationLine: "underline",
   },
   submitButton: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#5895D6",
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
     marginBottom: 10,
   },
   submitButtonText: {
+    fontFamily: "RalewayBlack",
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
@@ -290,15 +379,17 @@ const styles = StyleSheet.create({
   signupLink: {
     flexDirection: "row",
     marginTop: 20,
-    marginLeft: 72,
+    marginLeft: 96,
   },
   signupText: {
+    fontFamily: "RalewayBlack",
     fontSize: 14,
     color: "#555",
   },
   signupButtonText: {
+    fontFamily: "RalewayBlack",
     fontSize: 14,
-    color: "#007bff",
+    color: "#5895D6",
     fontWeight: "bold",
     marginLeft: 4,
   },

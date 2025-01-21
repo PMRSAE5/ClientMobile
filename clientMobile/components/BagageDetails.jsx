@@ -8,7 +8,6 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
 import QRCode from "react-native-qrcode-svg";
 
 const BagageDetails = ({ route, navigation }) => {

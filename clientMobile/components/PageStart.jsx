@@ -21,6 +21,7 @@ export default function PageStart({ navigation }) {
   useFonts({
     RalewayRegular: Raleway_400Regular,
     RalewayBold: Raleway_700Bold,
+    RalewayExtraBold: Raleway_800ExtraBold,
   });
 
   useEffect(() => {
@@ -28,14 +29,14 @@ export default function PageStart({ navigation }) {
       Animated.loop(
         Animated.sequence([
           Animated.timing(scaleAnim, {
-            toValue: 1.2,
+            toValue: 1.3,
             duration: 1000,
             easing: Easing.inOut(Easing.ease),
             useNativeDriver: true,
           }),
           Animated.timing(scaleAnim, {
             toValue: 1,
-            duration: 1000,
+            duration: 2000,
             easing: Easing.inOut(Easing.ease),
             useNativeDriver: true,
           }),
@@ -62,7 +63,7 @@ export default function PageStart({ navigation }) {
         </View>
 
         {/* Phrase d'accroche */}
-        <Text style={[styles.subtitle]}>
+        <Text style={styles.subtitle}>
           Simplifions vos trajets, réinventons l'accessibilité.
         </Text>
 
@@ -126,8 +127,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   subtitle: {
-    fontFamily: "RalewayRegular",
-    fontSize: 18,
+    fontFamily: "RalewayExtraBold",
+    fontWeight: "bold",
+    fontSize: 16,
     color: "#ffffff",
     textAlign: "center",
     marginBottom: 20,
@@ -139,7 +141,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   buttonTextPrimary: {
-    fontFamily: "RalewayBold",
+    fontFamily: "RalewayExtraBold",
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "bold",
