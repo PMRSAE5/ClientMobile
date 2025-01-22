@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: 140,
-    backgroundColor: "#f3f4f6",
+    backgroundColor: "#fff",
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 24,

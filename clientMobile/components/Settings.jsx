@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { UserContext } from "../UserContext";
-import { ThemeContext } from "../ThemeContext"; // Contexte du thème
+import { ThemeContext } from "../ThemeContext";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -17,10 +17,9 @@ export default function Settings({ onLogout }) {
   const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const navigation = useNavigation();
 
-  if (isDarkMode === undefined || toggleTheme === undefined) {
-    console.error("ThemeContext non défini ou mal configuré");
-    return null; // Retourne null si le contexte est absent
-  }
+  const [selectedLanguage, setSelectedLanguage] = useState("Français");
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [primaryColor, setPrimaryColor] = useState("#007bff");
 
   const handleLogout = () => {
     Alert.alert("Déconnexion", "Êtes-vous sûr de vouloir vous déconnecter ?", [
@@ -43,7 +42,7 @@ export default function Settings({ onLogout }) {
         Paramètres
       </Text>
 
-      {/* Option de mode sombre */}
+      {/* Mode sombre */}
       <View
         style={[
           styles.optionContainer,
@@ -57,46 +56,145 @@ export default function Settings({ onLogout }) {
         <Switch
           value={isDarkMode}
           onValueChange={toggleTheme}
-          thumbColor={isDarkMode ? "#007bff" : "#ccc"}
-          trackColor={{ false: "#ccc", true: "#007bff" }}
+          thumbColor={isDarkMode ? primaryColor : "#ccc"}
+          trackColor={{ false: "#ccc", true: primaryColor }}
         />
       </View>
 
-      {/* Lien vers la page de profil */}
-      <TouchableOpacity
-        style={[
-          styles.optionContainer,
-          isDarkMode && styles.optionContainerDark,
-        ]}
-        onPress={() => navigation.navigate("Profile")}
-      >
-        <Icon name="user" size={24} color={isDarkMode ? "#fff" : "#333"} />
-        <Text style={[styles.optionText, isDarkMode && styles.optionTextDark]}>
-          Mon profil
-        </Text>
-      </TouchableOpacity>
-
-      {/* Lien vers l’aide */}
+      {/* Langue */}
       <TouchableOpacity
         style={[
           styles.optionContainer,
           isDarkMode && styles.optionContainerDark,
         ]}
         onPress={() =>
-          Alert.alert("Aide", "Contactez-nous à support@pmove.com.")
+          Alert.alert(
+            "Changer de langue",
+            null,
+            [
+              {
+                text: "Français",
+                onPress: () => setSelectedLanguage("Français"),
+              },
+              {
+                text: "Anglais",
+                onPress: () => setSelectedLanguage("Anglais"),
+              },
+              {
+                text: "Espagnol",
+                onPress: () => setSelectedLanguage("Espagnol"),
+              },
+            ],
+            { cancelable: true }
+          )
+        }
+      >
+        <Icon name="globe" size={24} color={isDarkMode ? "#fff" : "#333"} />
+        <Text style={[styles.optionText, isDarkMode && styles.optionTextDark]}>
+          Langue ({selectedLanguage})
+        </Text>
+      </TouchableOpacity>
+
+      {/* Notifications */}
+      <View
+        style={[
+          styles.optionContainer,
+          isDarkMode && styles.optionContainerDark,
+        ]}
+      >
+        <Icon name="bell" size={24} color={isDarkMode ? "#fff" : "#333"} />
+        <Text style={[styles.optionText, isDarkMode && styles.optionTextDark]}>
+          Notifications
+        </Text>
+        <Switch
+          value={notificationsEnabled}
+          onValueChange={setNotificationsEnabled}
+          thumbColor={notificationsEnabled ? primaryColor : "#ccc"}
+          trackColor={{ false: "#ccc", true: primaryColor }}
+        />
+      </View>
+
+      {/* Modifier le mot de passe */}
+      <TouchableOpacity
+        style={[
+          styles.optionContainer,
+          isDarkMode && styles.optionContainerDark,
+        ]}
+        onPress={() => Alert.alert("Modifier votre mot de passe")}
+      >
+        <Icon name="lock" size={24} color={isDarkMode ? "#fff" : "#333"} />
+        <Text style={[styles.optionText, isDarkMode && styles.optionTextDark]}>
+          Modifier le mot de passe
+        </Text>
+      </TouchableOpacity>
+
+      {/* Couleur principale */}
+      <TouchableOpacity
+        style={[
+          styles.optionContainer,
+          isDarkMode && styles.optionContainerDark,
+        ]}
+        onPress={() =>
+          Alert.alert(
+            "Changer la couleur principale",
+            null,
+            [
+              { text: "Bleu", onPress: () => setPrimaryColor("#007bff") },
+              { text: "Rouge", onPress: () => setPrimaryColor("#ff0000") },
+              { text: "Vert", onPress: () => setPrimaryColor("#28a745") },
+            ],
+            { cancelable: true }
+          )
         }
       >
         <Icon
-          name="question-circle"
+          name="paint-brush"
           size={24}
           color={isDarkMode ? "#fff" : "#333"}
         />
         <Text style={[styles.optionText, isDarkMode && styles.optionTextDark]}>
-          Aide
+          Couleur principale
         </Text>
       </TouchableOpacity>
 
-      {/* Bouton de déconnexion */}
+      {/* À propos */}
+      <TouchableOpacity
+        style={[
+          styles.optionContainer,
+          isDarkMode && styles.optionContainerDark,
+        ]}
+        onPress={() =>
+          Alert.alert(
+            "À propos",
+            "Version 1.0.0\nPolitique de confidentialité."
+          )
+        }
+      >
+        <Icon
+          name="info-circle"
+          size={24}
+          color={isDarkMode ? "#fff" : "#333"}
+        />
+        <Text style={[styles.optionText, isDarkMode && styles.optionTextDark]}>
+          À propos de l'application
+        </Text>
+      </TouchableOpacity>
+
+      {/* Support */}
+      <TouchableOpacity
+        style={[
+          styles.optionContainer,
+          isDarkMode && styles.optionContainerDark,
+        ]}
+        onPress={() => Alert.alert("Contactez-nous à support@pmove.com")}
+      >
+        <Icon name="envelope" size={24} color={isDarkMode ? "#fff" : "#333"} />
+        <Text style={[styles.optionText, isDarkMode && styles.optionTextDark]}>
+          Support
+        </Text>
+      </TouchableOpacity>
+
+      {/* Déconnexion */}
       <TouchableOpacity
         style={[styles.logoutButton, isDarkMode && styles.logoutButtonDark]}
         onPress={handleLogout}
@@ -139,6 +237,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 15,
     marginBottom: 15,
+    gap: 10,
     borderRadius: 10,
     shadowColor: "#000",
     shadowOpacity: 0.1,

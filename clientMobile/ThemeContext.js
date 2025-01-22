@@ -9,8 +9,12 @@ export const ThemeProvider = ({ children }) => {
     setIsDarkMode((prevMode) => !prevMode);
   };
 
+  const theme = {
+    background: isDarkMode ? "#121212" : "#FFFFFF",
+  };
+
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
+    <ThemeContext.Provider value={{ isDarkMode, toggleTheme, theme }}>
       {children}
     </ThemeContext.Provider>
   );

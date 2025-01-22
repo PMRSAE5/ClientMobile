@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -18,6 +18,7 @@ import Reservation3 from "./components/Reservation3.jsx";
 import SplashScreen from "./components/SplashScreen.jsx";
 import BagageDetails from "./components/BagageDetails.jsx";
 import ConfirmationPage from "./components/ConfirmationPage.jsx";
+import BilletDetails from "./components/BilletDetails.jsx";
 import { ThemeProvider, ThemeContext } from "./ThemeContext";
 
 const Stack = createStackNavigator();
@@ -35,107 +36,95 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <UserProvider>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="SplashScreen">
-            <Stack.Screen
-              name="SplashScreen"
-              component={SplashScreen}
-              options={{ headerShown: false }}
-            />
-            {/* PageStart */}
-            <Stack.Screen
-              name="PageStart"
-              component={PageStart}
-              options={{ headerShown: false }}
-            />
-
-            {/* Login */}
-            <Stack.Screen name="Login" options={{ headerShown: false }}>
-              {(props) => (
-                <Connexion
-                  {...props}
-                  onLoginSuccess={() => setIsLoggedIn(true)} // Définit isLoggedIn à true lors de la connexion
+      <ThemeContext.Consumer>
+        {({ theme }) => (
+          <UserProvider>
+            <NavigationContainer
+              theme={{ colors: { background: theme.background } }}
+            >
+              <Stack.Navigator initialRouteName="SplashScreen">
+                <Stack.Screen
+                  name="SplashScreen"
+                  component={SplashScreen}
+                  options={{ headerShown: false }}
                 />
-              )}
-            </Stack.Screen>
-
-            {/* Signup */}
-            <Stack.Screen
-              name="Signup"
-              component={Inscription}
-              options={{ headerShown: false }}
-            />
-
-            {/* Inscription2 */}
-            <Stack.Screen
-              name="Inscription2"
-              component={Inscription2}
-              options={{ headerShown: false }}
-            />
-
-            {/* Accueil */}
-            <Stack.Screen
-              name="Accueil"
-              component={Accueil}
-              options={{ headerShown: false }}
-            />
-
-            {/* Settings */}
-            <Stack.Screen name="Settings" options={{ headerShown: false }}>
-              {(props) => (
-                <Settings
-                  {...props}
-                  onLogout={() => setIsLoggedIn(false)} // Met à jour isLoggedIn lors de la déconnexion
+                <Stack.Screen
+                  name="PageStart"
+                  component={PageStart}
+                  options={{ headerShown: false }}
                 />
-              )}
-            </Stack.Screen>
-
-            {/* Profile */}
-            <Stack.Screen
-              name="Profile"
-              component={Profile}
-              options={{ headerShown: false }}
-            />
-
-            {/* Réservation */}
-            <Stack.Screen
-              name="Reservation"
-              component={Reservation}
-              options={{ headerShown: false }}
-            />
-            {/* 2eme page de Réservation */}
-            <Stack.Screen
-              name="Reservation2"
-              component={Reservation2}
-              options={{ headerShown: false }}
-            />
-
-            {/* Détails des bagages */}
-            <Stack.Screen
-              name="BagageDetails"
-              component={BagageDetails}
-              options={{ headerShown: false }}
-            />
-
-            <Stack.Screen
-              name="Reservation3"
-              component={Reservation3}
-              options={{ headerShown: false }}
-            />
-
-            {/* Page de confirmation */}
-            <Stack.Screen
-              name="Confirmation"
-              component={ConfirmationPage}
-              options={{ headerShown: false }}
-            />
-          </Stack.Navigator>
-
-          {/* NavBar: affichée seulement si l'utilisateur est connecté */}
-          {isLoggedIn && <NavBar />}
-        </NavigationContainer>
-      </UserProvider>
+                <Stack.Screen name="Login" options={{ headerShown: false }}>
+                  {(props) => (
+                    <Connexion
+                      {...props}
+                      onLoginSuccess={() => setIsLoggedIn(true)}
+                    />
+                  )}
+                </Stack.Screen>
+                <Stack.Screen
+                  name="Signup"
+                  component={Inscription}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Inscription2"
+                  component={Inscription2}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Accueil"
+                  component={Accueil}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen name="Settings" options={{ headerShown: false }}>
+                  {(props) => (
+                    <Settings
+                      {...props}
+                      onLogout={() => setIsLoggedIn(false)}
+                    />
+                  )}
+                </Stack.Screen>
+                <Stack.Screen
+                  name="Profile"
+                  component={Profile}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Reservation"
+                  component={Reservation}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Reservation2"
+                  component={Reservation2}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="BagageDetails"
+                  component={BagageDetails}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Reservation3"
+                  component={Reservation3}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Confirmation"
+                  component={ConfirmationPage}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="BilletDetails"
+                  component={BilletDetails}
+                  options={{ headerShown: false }}
+                />
+              </Stack.Navigator>
+              {isLoggedIn && <NavBar />}
+            </NavigationContainer>
+          </UserProvider>
+        )}
+      </ThemeContext.Consumer>
     </ThemeProvider>
   );
 }
