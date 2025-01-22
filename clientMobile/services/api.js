@@ -127,6 +127,24 @@ export const checkReservation = async (num_reservation, base) => {
   }
 };
 
+export const deleteReservationFromRedis = async (num_reservation) => {
+  try {
+    console.log("Paramètres envoyés pour suppression :", num_reservation);
+    const response = await api.delete("/reservation/deleteFromRedis", {
+      data: { num_reservation },
+    });
+    console.log("Réponse du backend :", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la suppression de la réservation :", error);
+    throw (
+      error.response?.data || {
+        message: "Erreur lors de la suppression de la réservation.",
+      }
+    );
+  }
+};
+
 export const update = async (updatedData) => {
   try {
     const response = await api.put("/users/update", updatedData);
