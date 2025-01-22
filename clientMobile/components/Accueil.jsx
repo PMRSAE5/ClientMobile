@@ -77,7 +77,8 @@ export default function Accueil() {
 const styles = StyleSheet.create({
   listContent: {
     paddingHorizontal: 10,
-    paddingTop: 150, // Ajout de la marge supérieure
+    paddingTop: 100, // Ajout de la marge supérieure
+    paddingBottom: 150, // Ajout de la marge supérieure
   },
   headerContainer: {
     alignItems: "center",

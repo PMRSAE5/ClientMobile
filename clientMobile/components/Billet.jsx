@@ -1,8 +1,16 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const Billet = ({ ticket }) => {
-  // Fonction pour formater la date et l'heure
+  const navigation = useNavigation();
+
   const formatDateTime = (isoString) => {
     if (!isoString)
       return { date: "Date non spécifiée", time: "Heure non spécifiée" };
@@ -24,8 +32,11 @@ const Billet = ({ ticket }) => {
   const arriveeDateTime = formatDateTime(ticket?.heure_arrivee);
 
   return (
-    <ScrollView style={styles.scrollContainer}>
-      <View style={styles.ticketContainer}>
+    <ScrollView contentContainerStyle={styles.scrollContent}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("BilletDetails", { billet: ticket })}
+        style={styles.ticketContainer}
+      >
         <View style={styles.ticketHeader}>
           <Text style={styles.departArrivee}>
             {ticket.lieu_depart} {"\n"}à {"\n"}
@@ -60,7 +71,7 @@ const Billet = ({ ticket }) => {
             Type d'assistance : {ticket.assistance || "Non spécifiée"}
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -68,7 +79,10 @@ const Billet = ({ ticket }) => {
 const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
-    paddingBottom: 150,
+    paddingBottom: 10,
+  },
+  scrollContent: {
+    paddingBottom: 5,
   },
   ticketContainer: {
     backgroundColor: "#B0C4DE", // Bleu clair

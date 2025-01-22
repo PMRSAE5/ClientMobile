@@ -13,7 +13,6 @@ import { update as updateUser } from "../services/api";
 
 export default function Profile() {
   const { user, setUser } = useContext(UserContext);
-
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(user?.name || "");
   const [surname, setSurname] = useState(user?.surname || "");
@@ -29,7 +28,7 @@ export default function Profile() {
         surname,
         mail,
         num,
-        contact_num,
+        contactnum,
       };
       const response = await updateUser(updatedData);
 
