@@ -1,75 +1,198 @@
-import React from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import React, { useState, useRef } from "react";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Animated,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
+import {
+  useFonts,
+  Raleway_100Thin,
+  Raleway_200ExtraLight,
+  Raleway_300Light,
+  Raleway_400Regular,
+  Raleway_500Medium,
+  Raleway_600SemiBold,
+  Raleway_700Bold,
+  Raleway_800ExtraBold,
+  Raleway_900Black,
+} from "@expo-google-fonts/raleway";
 
-export default function NavBar() {
+const NavBar = () => {
   const navigation = useNavigation();
+  const [activeIndex, setActiveIndex] = useState(0); // Commence par Home
+  const screenWidth = Dimensions.get("window").width;
+
+  // Animation pour déplacer le rond
+  const position = useRef(new Animated.Value(activeIndex)).current;
+
+  // Création dynamique des animations pour chaque bouton
+  const animationRefs = Array(4)
+    .fill(null)
+    .map(() => ({
+      scaleIcon: useRef(new Animated.Value(1)).current,
+      translateYIcon: useRef(new Animated.Value(0)).current,
+      scaleText: useRef(new Animated.Value(1)).current,
+      translateYText: useRef(new Animated.Value(0)).current,
+    }));
+
+  const handleNavigation = (index, route) => {
+    setActiveIndex(index);
+
+    // Animation du déplacement du rond
+    Animated.timing(position, {
+      toValue: index,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+
+    // Animation des boutons
+    animationRefs.forEach((ref, i) => {
+      const isActive = i === index;
+
+      // Icône
+      Animated.timing(ref.scaleIcon, {
+        toValue: isActive ? 1.5 : 1,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+      Animated.timing(ref.translateYIcon, {
+        toValue: isActive ? -10 : 0,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+
+      // Texte
+      Animated.timing(ref.scaleText, {
+        toValue: isActive ? 1.2 : 1,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+      Animated.timing(ref.translateYText, {
+        toValue: isActive ? -5 : 0,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+    });
+
+    navigation.navigate(route);
+  };
+
+  // Calcul précis de la position des icônes
+  const translateX = position.interpolate({
+    inputRange: [0, 1, 2, 3],
+    outputRange: [
+      screenWidth * 0.06, // Position Home
+      screenWidth * 0.278, // Position Réserver
+      screenWidth * 0.5, // Position Profile
+      screenWidth * 0.72, // Position Settings
+    ],
+  });
+
+  useFonts({
+    RalewayRegular: Raleway_400Regular,
+    RalewayBold: Raleway_700Bold,
+    RalewayExtraBold: Raleway_800ExtraBold,
+    RalewayBlack: Raleway_900Black,
+  });
+
   return (
-    <View style={styles.navbar}>
-      {/* Home */}
-      <TouchableOpacity
-        style={styles.navButton}
-        onPress={() => navigation.navigate("Accueil")}
-      >
-        <Icon name="home" size={24} color="#fff" />
-        <Text style={styles.navText}>Home</Text>
-      </TouchableOpacity>
+    <View style={styles.navbarContainer}>
+      <View style={styles.navbar}>
+        {/* Rond central animé */}
+        <Animated.View
+          style={[styles.centralIndicator, { transform: [{ translateX }] }]}
+        />
 
-      {/* Add */}
-      <TouchableOpacity
-        style={styles.navButton}
-        onPress={() => navigation.navigate("Reservation")}
-      >
-        <Icon name="plus-circle" size={24} color="#fff" />
-        <Text style={styles.navText}>Réserver</Text>
-      </TouchableOpacity>
-
-      {/* Profile */}
-      <TouchableOpacity
-        style={styles.navButton}
-        onPress={() => navigation.navigate("Profile")}
-      >
-        <Icon name="user-circle" size={24} color="#fff" />
-        <Text style={styles.navText}>Profile</Text>
-      </TouchableOpacity>
-
-      {/* Settings */}
-      <TouchableOpacity
-        style={[styles.navButton, styles.settingsButton]}
-        onPress={() => navigation.navigate("Settings")}
-      >
-        <Icon name="cogs" size={24} color="#fff" />
-        <Text style={styles.navText}>Settings</Text>
-      </TouchableOpacity>
+        {[
+          { name: "home", label: "Accueil", route: "Accueil" },
+          { name: "plus-circle", label: "Réserver", route: "Reservation" },
+          { name: "user-circle", label: "Profile", route: "Profile" },
+          { name: "cogs", label: "Paramètres", route: "Settings" },
+        ].map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.navButton}
+            onPress={() => handleNavigation(index, item.route)}
+          >
+            <Animated.View
+              style={{
+                transform: [
+                  { scale: animationRefs[index].scaleIcon },
+                  { translateY: animationRefs[index].translateYIcon },
+                ],
+              }}
+            >
+              <Icon
+                name={item.name}
+                size={24}
+                color={activeIndex === index ? "#fff" : "#ccc"}
+              />
+            </Animated.View>
+            <Animated.Text
+              style={[
+                styles.navText,
+                activeIndex === index && styles.activeText,
+                {
+                  transform: [
+                    { scale: animationRefs[index].scaleText },
+                    { translateY: animationRefs[index].translateYText },
+                  ],
+                },
+              ]}
+            >
+              {item.label}
+            </Animated.Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
+  navbarContainer: {
+    position: "absolute",
+    bottom: 20,
+    width: "100%",
+    alignItems: "center",
+  },
   navbar: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     alignItems: "center",
-    backgroundColor: "#4682B4",
-    paddingVertical: 10,
+    backgroundColor: "#5489CE",
     paddingHorizontal: 15,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    height: 70,
+    borderRadius: 25,
+    width: "95%",
+  },
+  centralIndicator: {
+    position: "absolute",
+    bottom: 16,
+    width: 75,
+    height: 75,
+    borderRadius: 60,
+    backgroundColor: "#5489CE",
   },
   navButton: {
     alignItems: "center",
     flex: 1,
   },
   navText: {
-    marginTop: 5,
-    color: "#fff",
+    fontFamily: "RalewayBlack",
+    marginTop: 10,
+    color: "#ccc",
     fontSize: 12,
   },
-  settingsButton: {
-    borderRadius: 50,
-    backgroundColor: "#0C3E6D",
-    padding: 10,
-    marginLeft: 10,
+  activeText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
+
+export default NavBar;

@@ -111,6 +111,9 @@ export default function Reservation() {
                   num_reservation: billet.num_reservation,
                   lieu_depart: billet.lieu_depart,
                   lieu_arrivee: billet.lieu_arrivee,
+                  heure_depart: billet.heure_depart,
+                  heure_arrivee: billet.heure_arrivee,
+                  transport: selectedTransport,
                 },
               });
             }}

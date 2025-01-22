@@ -89,7 +89,7 @@ const Reservation3 = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.scrollContent}>
       <View style={styles.container}>
         <Text style={styles.title}>Résumé de votre Réservation</Text>
 
@@ -188,6 +188,10 @@ const Reservation3 = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 200, // Ajout d'espace en bas pour garantir que le dernier contenu est visible
+  },
   container: { flex: 1, padding: 20 },
   title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
   section: { marginBottom: 20 },

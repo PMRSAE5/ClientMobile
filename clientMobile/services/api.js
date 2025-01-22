@@ -33,6 +33,26 @@ export const login = async (mail, password) => {
   }
 };
 
+export const uploadImageToRedis = async (id, imageBase64) => {
+  try {
+    // Envoi de l'image encodée en Base64 à Redis avec un identifiant unique
+    const response = await api.post("reservation/storeImage", {
+      id,
+      imageBase64,
+    });
+
+    console.log("Image stockée avec succès :", response.data);
+    return response.data.imageKey; // Retourne la clé générée par le backend
+  } catch (error) {
+    console.error("Erreur lors du stockage de l'image dans Redis :", error);
+    throw (
+      error.response?.data || {
+        message: "Erreur lors du stockage de l'image.",
+      }
+    );
+  }
+};
+
 export const addBilletToRedis = async (billet) => {
   try {
     billet.bagages = billet.bagages.map((bagage) => ({
@@ -57,6 +77,37 @@ export const addBilletToRedis = async (billet) => {
       error.response?.data || error.message
     );
     throw error.response?.data || { message: "Erreur inconnue" };
+  }
+};
+
+export const getTickets = async (name, surname) => {
+  try {
+    console.log("Récupération des billets pour :", { name, surname });
+    const response = await api.get(`reservation/getTickets`, {
+      params: { name, surname }, // Envoi des paramètres en query string
+    });
+    console.log("Billets reçus :", response.data);
+    return response.data.billets;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des billets :", error);
+
+    if (error.response) {
+      console.error(
+        "Erreur réponse API :",
+        error.response.status,
+        error.response.data
+      );
+    } else if (error.request) {
+      console.error("Erreur réseau : aucune réponse reçue.");
+    } else {
+      console.error("Erreur inconnue :", error.message);
+    }
+
+    throw (
+      error.response?.data || {
+        message: "Erreur lors de la récupération des billets.",
+      }
+    );
   }
 };
 

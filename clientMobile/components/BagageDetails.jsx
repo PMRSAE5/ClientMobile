@@ -24,12 +24,10 @@ const BagageDetails = ({ route, navigation }) => {
 
   const handleAddBagage = () => {
     if (!bagageDetails.weight || !bagageDetails.description) {
-      Alert.alert(
-        "Erreur",
-        "Veuillez remplir tous les champs pour ajouter un bagage."
-      );
+      Alert.alert("Erreur", "Veuillez remplir tous les champs pour le bagage.");
       return;
     }
+
     if (bagages.length >= parseInt(billet.numBags, 10)) {
       Alert.alert(
         "Erreur",
@@ -45,7 +43,12 @@ const BagageDetails = ({ route, navigation }) => {
     };
 
     setBagages([...bagages, newBagage]);
-    setBagageDetails({ weight: "", description: "" });
+    setBagageDetails({
+      weight: "",
+      description: "",
+    });
+
+    Alert.alert("Succès", "Le bagage a été ajouté avec succès !");
   };
 
   const handleContinue = () => {
@@ -77,7 +80,7 @@ const BagageDetails = ({ route, navigation }) => {
             value={`https://pmrsae5.github.io/PageQRCode/BagageDetails.html?poids=${encodeURIComponent(
               bagage.weight
             )}&description=${encodeURIComponent(bagage.description)}`}
-            size={100}
+            size={150}
           />
         </View>
       ))}

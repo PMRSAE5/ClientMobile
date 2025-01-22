@@ -7,6 +7,12 @@
     "icon": "./assets/PMoveLogoSANSTITRE.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "permissions": [
+      "CAMERA",
+      "CAMERA_ROLL",
+      "READ_EXTERNAL_STORAGE",
+      "WRITE_EXTERNAL_STORAGE"
+    ],
     "splash": {
       "image": "./assets/PMoveLogoSANSTITRE.png",
       "resizeMode": "contain",

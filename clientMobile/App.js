@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import { LogBox } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { UserProvider } from "./UserContext"; // Import du UserProvider
 import { Provider as PaperProvider } from "react-native-paper";
-import { DefaultTheme } from "react-native-paper";
 import PageStart from "./components/PageStart.jsx";
 import Connexion from "./components/Connexion";
 import Inscription from "./components/Inscription";
@@ -18,22 +18,23 @@ import Reservation3 from "./components/Reservation3.jsx";
 import SplashScreen from "./components/SplashScreen.jsx";
 import BagageDetails from "./components/BagageDetails.jsx";
 import ConfirmationPage from "./components/ConfirmationPage.jsx";
+import { ThemeProvider, ThemeContext } from "./ThemeContext";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const theme = {
-    ...DefaultTheme,
-    colors: {
-      ...DefaultTheme.colors,
-      primary: "#6200ee", // Personnalise la couleur primaire
-      accent: "#03dac4", // Personnalise la couleur d'accentuation
-    },
-  };
+
+  // Ignorer les logs spécifiques
+  LogBox.ignoreLogs([
+    "Request failed with status code 404", // Erreurs spécifiques à ignorer
+    "VirtualizedLists should never be nested", // Avertissement FlatList
+    "Erreur lors de la récupération des billets", // Erreur de récupération des billets dans Accueil
+    "Erreur réponse API : 404", // Erreur de réponse API dans Connexion
+  ]);
 
   return (
-    <PaperProvider theme={theme}>
+    <ThemeProvider>
       <UserProvider>
         <NavigationContainer>
           <Stack.Navigator initialRouteName="SplashScreen">
@@ -135,6 +136,6 @@ export default function App() {
           {isLoggedIn && <NavBar />}
         </NavigationContainer>
       </UserProvider>
-    </PaperProvider>
+    </ThemeProvider>
   );
 }
