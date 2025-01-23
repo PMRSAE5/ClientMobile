@@ -1,6 +1,16 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import QRCode from "react-native-qrcode-svg";
+import { deleteReservationFromRedis } from "../services/api";
+import { useNavigation } from "@react-navigation/native";
 
 const BilletDetails = ({ route }) => {
   const billet = route?.params?.billet;
@@ -26,6 +36,47 @@ const BilletDetails = ({ route }) => {
   )}&arrivee=${encodeURIComponent(
     billet.lieu_arrivee || "Non renseigné"
   )}&bagages=${encodeURIComponent(billet.numBags || "0")}`;
+
+  const handleDeleteReservation = async () => {
+    Alert.alert(
+      "Confirmation",
+      "Voulez-vous vraiment supprimer cette réservation ?",
+      [
+        { text: "Annuler", style: "cancel" },
+        {
+          text: "Supprimer",
+          onPress: async () => {
+            try {
+              console.log(
+                "Tentative de suppression pour :",
+                billet.num_reservation
+              );
+
+              const response = await deleteReservationFromRedis(
+                billet.num_reservation
+              );
+
+              console.log("Réponse après suppression :", response);
+
+              Alert.alert(
+                "Succès",
+                response.message ||
+                  "La réservation a été supprimée avec succès."
+              );
+              navigation.goBack(); // Retourne à l'écran précédent
+            } catch (error) {
+              console.error("Erreur lors de la suppression :", error);
+              Alert.alert(
+                "Erreur",
+                error.message ||
+                  "Une erreur est survenue lors de la suppression."
+              );
+            }
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -83,6 +134,14 @@ const BilletDetails = ({ route }) => {
         <Text style={styles.qrLabel}>QR Code de la Réservation :</Text>
         <QRCode value={qrData} size={200} />
       </View>
+
+      {/* Bouton pour supprimer la réservation */}
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={handleDeleteReservation}
+      >
+        <Text style={styles.deleteButtonText}>Supprimer la Réservation</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -152,6 +211,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
     marginBottom: 10,
+  },
+  deleteButton: {
+    backgroundColor: "#e53935",
+    paddingVertical: 15,
+    paddingHorizontal: 50,
+    borderRadius: 10,
+    marginTop: 20,
+    alignItems: "center",
+  },
+  deleteButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   errorContainer: {
     flex: 1,

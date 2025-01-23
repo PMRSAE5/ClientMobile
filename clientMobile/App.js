@@ -20,6 +20,7 @@ import BagageDetails from "./components/BagageDetails.jsx";
 import ConfirmationPage from "./components/ConfirmationPage.jsx";
 import BilletDetails from "./components/BilletDetails.jsx";
 import { ThemeProvider, ThemeContext } from "./ThemeContext";
+import EditProfile from "./components/EditProfile.jsx";
 
 const Stack = createStackNavigator();
 
@@ -117,6 +118,11 @@ export default function App() {
                 <Stack.Screen
                   name="BilletDetails"
                   component={BilletDetails}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="EditProfile"
+                  component={EditProfile}
                   options={{ headerShown: false }}
                 />
               </Stack.Navigator>

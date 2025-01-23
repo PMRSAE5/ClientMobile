@@ -128,32 +128,21 @@ export default function Settings({ onLogout }) {
         </Text>
       </TouchableOpacity>
 
-      {/* Couleur principale */}
+      {/* Modifier le profil */}
       <TouchableOpacity
         style={[
           styles.optionContainer,
           isDarkMode && styles.optionContainerDark,
         ]}
-        onPress={() =>
-          Alert.alert(
-            "Changer la couleur principale",
-            null,
-            [
-              { text: "Bleu", onPress: () => setPrimaryColor("#007bff") },
-              { text: "Rouge", onPress: () => setPrimaryColor("#ff0000") },
-              { text: "Vert", onPress: () => setPrimaryColor("#28a745") },
-            ],
-            { cancelable: true }
-          )
-        }
+        onPress={() => navigation.navigate("EditProfile")}
       >
         <Icon
-          name="paint-brush"
+          name="user-circle"
           size={24}
           color={isDarkMode ? "#fff" : "#333"}
         />
         <Text style={[styles.optionText, isDarkMode && styles.optionTextDark]}>
-          Couleur principale
+          Modifier le profil
         </Text>
       </TouchableOpacity>
 

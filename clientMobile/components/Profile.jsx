@@ -1,50 +1,21 @@
-import React, { useContext, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Alert,
-  Image,
-} from "react-native";
+import React, { useContext } from "react";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { UserContext } from "../UserContext";
-import { update as updateUser } from "../services/api";
+import QRCode from "react-native-qrcode-svg";
 
 export default function Profile() {
-  const { user, setUser } = useContext(UserContext);
-  const [isEditing, setIsEditing] = useState(false);
-  const [name, setName] = useState(user?.name || "");
-  const [surname, setSurname] = useState(user?.surname || "");
-  const [mail, setMail] = useState(user?.mail || "");
-  const [num, setNum] = useState(user?.num || "");
-  const [contactnum, setContactnum] = useState(user?.contact_num || "");
+  const { user } = useContext(UserContext);
 
-  const handleUpdate = async () => {
+  // Fonction pour formater la date en français
+  const formatDateToFrench = (dateString) => {
+    if (!dateString) return "Non renseigné";
+    const options = { year: "numeric", month: "long", day: "numeric" };
     try {
-      const updatedData = {
-        ID_Client: user.ID_Client,
-        name,
-        surname,
-        mail,
-        num,
-        contactnum,
-      };
-      const response = await updateUser(updatedData);
-
-      if (response.success) {
-        Alert.alert("Succès", "Vos informations ont été mises à jour.");
-        setUser({ ...user, name, surname, mail, num, contactnum });
-        setIsEditing(false);
-      } else {
-        Alert.alert(
-          "Erreur",
-          response.message || "Impossible de mettre à jour vos informations."
-        );
-      }
+      const date = new Date(dateString);
+      return new Intl.DateTimeFormat("fr-FR", options).format(date);
     } catch (error) {
-      console.error("Erreur lors de la mise à jour :", error);
-      Alert.alert("Erreur", "Une erreur est survenue lors de la mise à jour.");
+      console.error("Erreur lors du formatage de la date :", error);
+      return "Non valide";
     }
   };
 
@@ -58,11 +29,11 @@ export default function Profile() {
       {/* Profile Section */}
       <View style={styles.profileSection}>
         <Image
-          source={require("../assets/icon.png")} // Image de profil par défaut
+          source={require("../assets/PMoveLogoSANSTITRE.png")}
           style={styles.profileImage}
         />
         <Text style={styles.profileName}>
-          {name} {surname}
+          {user?.name || "Non renseigné"} {user?.surname || "Non renseigné"}
         </Text>
       </View>
 
@@ -70,94 +41,62 @@ export default function Profile() {
       <View style={styles.infoSection}>
         <Text style={styles.infoTitle}>Informations personnelles</Text>
         <View style={styles.infoRow}>
-          <View style={styles.infoColumn}>
-            <Text style={styles.infoLabel}>Prénom :</Text>
-            {isEditing ? (
-              <TextInput
-                style={styles.input}
-                value={name}
-                onChangeText={setName}
-              />
-            ) : (
-              <Text style={styles.infoValue}>{name || "Non renseigné"}</Text>
-            )}
-          </View>
-          <View style={styles.infoColumn}>
-            <Text style={styles.infoLabel}>Nom :</Text>
-            {isEditing ? (
-              <TextInput
-                style={styles.input}
-                value={surname}
-                onChangeText={setSurname}
-              />
-            ) : (
-              <Text style={styles.infoValue}>{surname || "Non renseigné"}</Text>
-            )}
-          </View>
+          <Text style={styles.infoLabel}>Email :</Text>
+          <Text style={styles.infoValue}>{user?.mail || "Non renseigné"}</Text>
         </View>
-
         <View style={styles.infoRow}>
-          <View style={styles.infoColumn}>
-            <Text style={styles.infoLabel}>Téléphone :</Text>
-            {isEditing ? (
-              <TextInput
-                style={styles.input}
-                value={num}
-                onChangeText={setNum}
-                keyboardType="phone-pad"
-              />
-            ) : (
-              <Text style={styles.infoValue}>{num || "Non renseigné"}</Text>
-            )}
-          </View>
-          <View style={styles.infoColumn}>
-            <Text style={styles.infoLabel}>Contact d'urgence :</Text>
-            {isEditing ? (
-              <TextInput
-                style={styles.input}
-                value={contactnum}
-                onChangeText={setContactnum}
-                keyboardType="phone-pad"
-              />
-            ) : (
-              <Text style={styles.infoValue}>
-                {contactnum || "Non renseigné"}
-              </Text>
-            )}
-          </View>
+          <Text style={styles.infoLabel}>Téléphone :</Text>
+          <Text style={styles.infoValue}>{user?.num || "Non renseigné"}</Text>
         </View>
-
         <View style={styles.infoRow}>
-          <View style={styles.infoColumn}>
-            <Text style={styles.infoLabel}>Email :</Text>
-            {isEditing ? (
-              <TextInput
-                style={styles.input}
-                value={mail}
-                onChangeText={setMail}
-                keyboardType="email-address"
-              />
-            ) : (
-              <Text style={styles.infoValue}>{mail || "Non renseigné"}</Text>
-            )}
-          </View>
+          <Text style={styles.infoLabel}>Date de naissance :</Text>
+          <Text style={styles.infoValue}>
+            {formatDateToFrench(user?.birth) || "Non renseigné"}
+          </Text>
+        </View>
+        <View style={styles.infoRow}>
+          <Text style={styles.infoLabel}>Handicap :</Text>
+          <Text style={styles.infoValue}>
+            {user?.handicap || "Non renseigné"}
+          </Text>
+        </View>
+        <View style={styles.infoRow}>
+          <Text style={styles.infoLabel}>Contact d'urgence :</Text>
+          <Text style={styles.infoValue}>
+            {user?.contact_num || "Non renseigné"}
+          </Text>
+        </View>
+        <View style={styles.infoRow}>
+          <Text style={styles.infoLabel}>Email Contact d'urgence :</Text>
+          <Text style={styles.infoValue}>
+            {user?.contact_mail || "Non renseigné"}
+          </Text>
         </View>
       </View>
 
-      {/* Button Section */}
-      <View style={styles.buttonSection}>
-        {isEditing ? (
-          <TouchableOpacity style={styles.saveButton} onPress={handleUpdate}>
-            <Text style={styles.buttonText}>Enregistrer</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={styles.editButton}
-            onPress={() => setIsEditing(true)}
-          >
-            <Text style={styles.buttonText}>Modifier</Text>
-          </TouchableOpacity>
-        )}
+      {/* QR Code Section */}
+      <View style={styles.qrCodeSection}>
+        <Text style={styles.infoTitle}>QR Code</Text>
+        <QRCode
+          value={`https://pmrsae5.github.io/PageQRCode/client.html?name=${encodeURIComponent(
+            user?.name || "Non renseigné"
+          )}&surname=${encodeURIComponent(
+            user?.surname || "Non renseigné"
+          )}&mail=${encodeURIComponent(
+            user?.mail || "Non renseigné"
+          )}&num=${encodeURIComponent(
+            user?.num || "Non renseigné"
+          )}&handicap=${encodeURIComponent(
+            user?.handicap || "Non renseigné"
+          )}&birth=${encodeURIComponent(
+            user?.birth || "Non renseigné"
+          )}&contact_mail=${encodeURIComponent(
+            user?.contact_mail || "Non renseigné"
+          )}&contactnum=${encodeURIComponent(
+            user?.contact_num || "Non renseigné"
+          )}`}
+          size={200}
+        />
       </View>
     </View>
   );
@@ -166,7 +105,6 @@ export default function Profile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
     padding: 20,
     paddingTop: 70,
   },
@@ -216,10 +154,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 15,
   },
-  infoColumn: {
-    flex: 1,
-    marginHorizontal: 5,
-  },
   infoLabel: {
     fontSize: 14,
     fontWeight: "bold",
@@ -230,32 +164,8 @@ const styles = StyleSheet.create({
     color: "#333",
     marginTop: 5,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 10,
-    backgroundColor: "#f9f9f9",
-    fontSize: 14,
-  },
-  buttonSection: {
+  qrCodeSection: {
     alignItems: "center",
-  },
-  editButton: {
-    backgroundColor: "#007bff",
-    paddingVertical: 15,
-    paddingHorizontal: 50,
-    borderRadius: 10,
-  },
-  saveButton: {
-    backgroundColor: "#28a745",
-    paddingVertical: 15,
-    paddingHorizontal: 50,
-    borderRadius: 10,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
+    marginTop: 20,
   },
 });
