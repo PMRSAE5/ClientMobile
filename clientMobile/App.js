@@ -1,9 +1,12 @@
-import React, { useContext, useState } from "react";
-import { LogBox } from "react-native";
+import React, { useContext, useState, useEffect } from "react";
+import { LogBox, View, Text, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { UserProvider } from "./UserContext"; // Import du UserProvider
-import { Provider as PaperProvider } from "react-native-paper";
+import NetInfo from "@react-native-community/netinfo"; // Importer NetInfo
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Pour stocker les données hors-ligne
+import Toast from "react-native-toast-message";
+
+import { UserProvider } from "./UserContext";
 import PageStart from "./components/PageStart.jsx";
 import Connexion from "./components/Connexion";
 import Inscription from "./components/Inscription";
@@ -26,6 +29,53 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isConnected, setIsConnected] = useState(true); // État pour la connexion
+
+  // Gérer l'état de connexion
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      if (state.isConnected && !isConnected) {
+        Toast.show({
+          type: "success",
+          text1: "Connexion rétablie",
+          text2: "Vous êtes de nouveau en ligne ! 👌",
+        });
+      } else if (!state.isConnected && isConnected) {
+        Toast.show({
+          type: "error",
+          text1: "Pas de connexion",
+          text2:
+            "Vous êtes hors ligne. Certaines fonctionnalités ne sont pas disponibles. 😔",
+        });
+      }
+      setIsConnected(state.isConnected);
+    });
+
+    return () => unsubscribe();
+  }, [isConnected]);
+
+  // Fonction pour synchroniser les requêtes hors-ligne
+  const syncPendingRequests = async () => {
+    try {
+      const pendingRequests = await AsyncStorage.getItem("pendingRequests");
+      if (pendingRequests) {
+        const requests = JSON.parse(pendingRequests);
+        for (const req of requests) {
+          const response = await fetch(req.url, {
+            method: req.method,
+            headers: req.headers,
+            body: req.body,
+          });
+          if (response.ok) {
+            console.log("Requête synchronisée :", req);
+          }
+        }
+        await AsyncStorage.removeItem("pendingRequests");
+      }
+    } catch (error) {
+      console.error("Erreur lors de la synchronisation :", error);
+    }
+  };
 
   // Ignorer les logs spécifiques
   LogBox.ignoreLogs([
@@ -128,9 +178,32 @@ export default function App() {
               </Stack.Navigator>
               {isLoggedIn && <NavBar />}
             </NavigationContainer>
+
+            {/* Affichage de l'état de connexion */}
+            {!isConnected && (
+              <View style={styles.offlineBanner}>
+                <Text style={styles.offlineText}>Mode hors-ligne activé</Text>
+              </View>
+            )}
           </UserProvider>
         )}
       </ThemeContext.Consumer>
     </ThemeProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  offlineBanner: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "red",
+    padding: 10,
+    alignItems: "center",
+  },
+  offlineText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+});
