@@ -59,6 +59,7 @@ const Reservation3 = ({ route, navigation }) => {
           ...billet,
           bagages: billet.bagages || [],
         },
+        email: user.mail, // Inclure l'email de l'utilisateur connecté
       };
 
       console.log("Données envoyées à Redis :", dataToSend);
@@ -74,7 +75,7 @@ const Reservation3 = ({ route, navigation }) => {
 
       const result = await response.json();
       if (response.ok) {
-        Alert.alert("Succès", "Données envoyées à Redis avec succès !");
+        Alert.alert("Succès", "Données envoyées à Redis et email envoyé !");
         navigation.navigate("Confirmation");
       } else {
         Alert.alert("Erreur", result.message || "Une erreur est survenue.");
@@ -83,7 +84,7 @@ const Reservation3 = ({ route, navigation }) => {
       console.error("Erreur lors de l'envoi des données :", error);
       Alert.alert(
         "Erreur",
-        "Impossible d'envoyer les données à Redis. Veuillez réessayer."
+        "Impossible d'envoyer les données ou l'email. Veuillez réessayer."
       );
     }
   };

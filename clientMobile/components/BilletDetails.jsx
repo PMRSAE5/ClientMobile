@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const BilletDetails = ({ route }) => {
   const billet = route?.params?.billet;
+  const navigation = useNavigation();
 
   if (!billet) {
     return (
@@ -63,7 +64,7 @@ const BilletDetails = ({ route }) => {
                 response.message ||
                   "La réservation a été supprimée avec succès."
               );
-              navigation.goBack(); // Retourne à l'écran précédent
+              navigation.navigate("Accueil"); // Retourne à l'écran précédent
             } catch (error) {
               console.error("Erreur lors de la suppression :", error);
               Alert.alert(
