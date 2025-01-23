@@ -169,3 +169,21 @@ export const update = async (updatedData) => {
     );
   }
 };
+
+export const sendConfirmationEmail = async (email, subject, message) => {
+  try {
+    const response = await axios.post(
+      "http://172.20.10.2:3000/reservation/sendConfirmationEmail",
+      {
+        email,
+        subject,
+        message,
+      }
+    );
+    console.log("E-mail envoyé :", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de l'envoi de l'email :", error);
+    throw error.response?.data || { message: "Erreur inconnue." };
+  }
+};
