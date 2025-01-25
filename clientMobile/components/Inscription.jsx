@@ -22,10 +22,11 @@ import {
   Raleway_800ExtraBold,
   Raleway_900Black,
 } from "@expo-google-fonts/raleway";
+import { useNavigation } from "@react-navigation/native";
 
 const API_BASE_URL = "http://172.20.10.2:3000";
 
-export default function Signup({ navigation }) {
+export default function Inscription({ navigation }) {
   const [formData, setFormData] = useState({
     name: "",
     surname: "",
@@ -39,7 +40,14 @@ export default function Signup({ navigation }) {
     contact_num: "",
   });
 
-  const [showDropdown, setShowDropdown] = useState(false); // Correction ici
+  const [showDropdown, setShowDropdown] = useState(false);
+  // État pour la checkbox
+  const [isChecked, setIsChecked] = useState(false);
+
+  // Gestion du clic sur la checkbox
+  const handleCheckboxToggle = () => {
+    setIsChecked(!isChecked);
+  };
 
   useFonts({
     RalewayRegular: Raleway_400Regular,
@@ -69,25 +77,44 @@ export default function Signup({ navigation }) {
   ];
 
   const handleSubmit = async () => {
+    console.log("Début de la méthode handleSubmit...");
+
     try {
+      console.log("Envoi des données au serveur :", formData);
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000); // Timeout après 5 secondes
+
       const response = await fetch(`${API_BASE_URL}/users/userAdd`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
+        signal: controller.signal, // Associez le signal de timeout
       });
 
-      const result = await response.json();
+      clearTimeout(timeout); // Annulez le timeout si la requête réussit
 
       if (response.ok) {
+        // Remise du `if (response.ok)`
+        const result = await response.json();
+        console.log("Réponse du serveur :", result);
+
         Alert.alert("Succès", "Utilisateur ajouté avec succès !");
         navigation.navigate("Inscription2");
       } else {
-        Alert.alert("Erreur", result.error || "Une erreur est survenue.");
+        console.error("Erreur côté serveur :", await response.text());
+        Alert.alert("Erreur", "Une erreur est survenue lors de l'ajout.");
       }
     } catch (error) {
-      Alert.alert("Erreur", "Impossible de se connecter au serveur.");
+      if (error.name === "AbortError") {
+        console.error("La requête a expiré !");
+        Alert.alert("Erreur", "Le serveur a mis trop de temps à répondre.");
+      } else {
+        console.error("Erreur lors de la requête :", error);
+        Alert.alert("Erreur", "Impossible de se connecter au serveur.");
+      }
     }
   };
 
@@ -193,7 +220,6 @@ export default function Signup({ navigation }) {
         </View>
       </View>
 
-      {/* Contact Mail et Contact Num */}
       <View style={styles.row}>
         <View style={styles.inputWrapper}>
           <Text style={styles.label}>Contact Mail</Text>
@@ -216,6 +242,30 @@ export default function Signup({ navigation }) {
         </View>
       </View>
 
+      {/* Champs Email et Numéro */}
+      <View style={styles.row}>
+        <View style={styles.inputWrapper}>
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            keyboardType="email-address"
+            value={formData.mail}
+            onChangeText={(value) => handleChange("mail", value)}
+          />
+        </View>
+        <View style={styles.inputWrapper}>
+          <Text style={styles.label}>Numéro</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Numéro"
+            keyboardType="phone-pad"
+            value={formData.num}
+            onChangeText={(value) => handleChange("num", value)}
+          />
+        </View>
+      </View>
+
       {/* Mot de passe */}
       <View style={styles.row}>
         <View style={styles.inputWrapper}>
@@ -230,8 +280,24 @@ export default function Signup({ navigation }) {
         </View>
       </View>
 
+      <View style={styles.inputWrapper}>
+        <Text style={styles.label}>Note</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Entrez une note (facultatif)"
+          value={formData.note}
+          onChangeText={(value) => handleChange("note", value)}
+        />
+      </View>
+
       {/* Conditions générales */}
       <View style={styles.checkboxContainer}>
+        <TouchableOpacity
+          style={[styles.checkbox, isChecked && styles.checkedCheckbox]}
+          onPress={handleCheckboxToggle}
+        >
+          {isChecked && <Text style={styles.checkboxCheck}>✔</Text>}
+        </TouchableOpacity>
         <TouchableOpacity>
           <Text style={styles.linkText}>
             J'ai lu et j'accepte les Conditions générales
@@ -256,11 +322,11 @@ export default function Signup({ navigation }) {
 
 const styles = StyleSheet.create({
   logo: {
-    width: 600,
-    height: 600,
+    width: 550,
+    height: 550,
     flex: 4,
-    marginTop: 80,
-    marginLeft: -100,
+    marginTop: 60,
+    marginLeft: -70,
     position: "absolute",
   },
   background: {
@@ -360,6 +426,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   linkText: {
+    fontFamily: "RalewayBlack",
     color: "#5895D6",
     textDecorationLine: "underline",
   },
@@ -392,5 +459,24 @@ const styles = StyleSheet.create({
     color: "#5895D6",
     fontWeight: "bold",
     marginLeft: 4,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    marginRight: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+  },
+  checkedCheckbox: {
+    backgroundColor: "#5895D6",
+    borderColor: "#5895D6",
+  },
+  checkboxCheck: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });

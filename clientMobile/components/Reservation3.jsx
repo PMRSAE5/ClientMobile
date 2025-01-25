@@ -59,7 +59,7 @@ const Reservation3 = ({ route, navigation }) => {
           ...billet,
           bagages: billet.bagages || [],
         },
-        email: user.mail, // Inclure l'email de l'utilisateur connecté
+        email: user.mail,
       };
 
       console.log("Données envoyées à Redis :", dataToSend);
