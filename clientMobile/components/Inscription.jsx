@@ -78,6 +78,13 @@ export default function Inscription({ navigation }) {
 
   const handleSubmit = async () => {
     console.log("Début de la méthode handleSubmit...");
+    if (!isChecked) {
+      Alert.alert(
+        "Attention",
+        "Vous devez accepter les conditions générales pour vous inscrire."
+      );
+      return; // Arrête l'exécution si la case n'est pas cochée
+    }
 
     try {
       console.log("Envoi des données au serveur :", formData);
@@ -298,7 +305,9 @@ export default function Inscription({ navigation }) {
         >
           {isChecked && <Text style={styles.checkboxCheck}>✔</Text>}
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Confidentialité")}
+        >
           <Text style={styles.linkText}>
             J'ai lu et j'accepte les Conditions générales
           </Text>

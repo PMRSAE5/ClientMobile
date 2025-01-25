@@ -24,6 +24,7 @@ import ConfirmationPage from "./components/ConfirmationPage.jsx";
 import BilletDetails from "./components/BilletDetails.jsx";
 import { ThemeProvider, ThemeContext } from "./ThemeContext";
 import EditProfile from "./components/EditProfile.jsx";
+import Confidentialite from "./components/Confidentialite.jsx";
 
 const Stack = createStackNavigator();
 
@@ -112,6 +113,11 @@ export default function App() {
                     />
                   )}
                 </Stack.Screen>
+                <Stack.Screen
+                  name="Confidentialité"
+                  component={Confidentialite}
+                  options={{ headerShown: false }}
+                />
                 <Stack.Screen
                   name="Signup"
                   component={Inscription}
