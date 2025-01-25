@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
+  Keyboard,
 } from "react-native";
 import { checkReservation } from "../services/api";
 import { useNavigation } from "@react-navigation/native";
@@ -37,6 +38,8 @@ export default function Reservation() {
         selectedTransport
       );
       Alert.alert("Succès", "Réservation trouvée !");
+      // Masquer le clavier
+      Keyboard.dismiss();
       setBillet(response.reservation); // Stocke les informations du billet
     } catch (error) {
       Alert.alert(
