@@ -5,11 +5,32 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import {
+  useFonts,
+  Raleway_100Thin,
+  Raleway_200ExtraLight,
+  Raleway_300Light,
+  Raleway_400Regular,
+  Raleway_500Medium,
+  Raleway_600SemiBold,
+  Raleway_700Bold,
+  Raleway_800ExtraBold,
+  Raleway_900Black,
+} from "@expo-google-fonts/raleway";
 
 const Billet = ({ ticket }) => {
+  console.log("Détails du ticket :", ticket);
+
   const navigation = useNavigation();
+  useFonts({
+    RalewayRegular: Raleway_400Regular,
+    RalewayBold: Raleway_700Bold,
+    RalewayExtraBold: Raleway_800ExtraBold,
+    RalewayBlack: Raleway_900Black,
+  });
 
   const formatDateTime = (isoString) => {
     if (!isoString)
@@ -65,11 +86,22 @@ const Billet = ({ ticket }) => {
             {ticket.name} {ticket.surname}
           </Text>
           <Text style={styles.ticketInfo}>
-            Accompagnateur : {ticket.acc || "Non spécifié"}
+            Accompagnateur :{" "}
+            {ticket.companion
+              ? `${ticket.companion.name || " "} ${
+                  ticket.companion.surname || " "
+                }`
+              : "Aucun"}
           </Text>
           <Text style={styles.ticketInfo}>
-            Type d'assistance : {ticket.assistance || "Non spécifiée"}
+            Type d'assistance : {ticket.wheelchair || "Aucun"}
           </Text>
+          <View style={styles.logoContainer}>
+            <Image
+              source={require("../assets/PMoveLogoSANSTITRE.png")}
+              style={styles.logo}
+            />
+          </View>
         </View>
       </TouchableOpacity>
     </ScrollView>
@@ -103,6 +135,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   departArrivee: {
+    fontFamily: "RalewayExtraBold",
     fontSize: 16,
     fontWeight: "bold",
     color: "#fff",
@@ -113,23 +146,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   timeLabel: {
+    fontFamily: "RalewayBold",
     fontSize: 12,
     fontWeight: "bold",
     color: "#fff",
     marginBottom: 3,
   },
   time: {
+    fontFamily: "RalewayBold",
     fontSize: 18,
     fontWeight: "bold",
     color: "#fff",
   },
   date: {
+    fontFamily: "RalewayBold",
     fontSize: 14,
     fontWeight: "bold",
     color: "#fff",
     marginTop: 5,
   },
   transportType: {
+    fontFamily: "RalewayBlack",
     fontSize: 16,
     fontWeight: "bold",
     color: "#fff",
@@ -140,9 +177,21 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   ticketInfo: {
+    fontFamily: "RalewayBold",
     fontSize: 14,
     color: "#fff",
     marginBottom: 5,
+  },
+  logoContainer: {
+    position: "absolute",
+    bottom: -20,
+    right: -10,
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    alignSelf: "center",
+    marginTop: 10,
   },
 });
 

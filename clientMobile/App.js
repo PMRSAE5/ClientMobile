@@ -171,6 +171,7 @@ export default function App() {
                   component={ConfirmationPage}
                   options={{ headerShown: false }}
                 />
+
                 <Stack.Screen
                   name="BilletDetails"
                   component={BilletDetails}

@@ -2,11 +2,31 @@ import React, { useContext } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { UserContext } from "../UserContext";
 import QRCode from "react-native-qrcode-svg";
+import { ScrollView } from "react-native-gesture-handler";
+
+import {
+  useFonts,
+  Raleway_100Thin,
+  Raleway_200ExtraLight,
+  Raleway_300Light,
+  Raleway_400Regular,
+  Raleway_500Medium,
+  Raleway_600SemiBold,
+  Raleway_700Bold,
+  Raleway_800ExtraBold,
+  Raleway_900Black,
+} from "@expo-google-fonts/raleway";
 
 export default function Profile() {
+  useFonts({
+    RalewayRegular: Raleway_400Regular,
+    RalewayBold: Raleway_700Bold,
+    RalewayExtraBold: Raleway_800ExtraBold,
+    RalewayBlack: Raleway_900Black,
+  });
+
   const { user } = useContext(UserContext);
 
-  // Fonction pour formater la date en français
   const formatDateToFrench = (dateString) => {
     if (!dateString) return "Non renseigné";
     const options = { year: "numeric", month: "long", day: "numeric" };
@@ -20,89 +40,97 @@ export default function Profile() {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Mon espace PMOVE</Text>
-      </View>
+    <ScrollView contentContainerStyle={styles.scrollcontent}>
+      <View style={styles.container}>
+        {/* Header */}
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Mon espace PMOVE</Text>
+        </View>
 
-      {/* Profile Section */}
-      <View style={styles.profileSection}>
-        <Image
-          source={require("../assets/PMoveLogoSANSTITRE.png")}
-          style={styles.profileImage}
-        />
-        <Text style={styles.profileName}>
-          {user?.name || "Non renseigné"} {user?.surname || "Non renseigné"}
-        </Text>
-      </View>
+        {/* Profile Section */}
+        <View style={styles.profileSection}>
+          <Image
+            source={require("../assets/PMoveLogoSANSTITRE.png")}
+            style={styles.profileImage}
+          />
+          <Text style={styles.profileName}>
+            {user?.name || "Non renseigné"} {user?.surname || "Non renseigné"}
+          </Text>
+        </View>
 
-      {/* Information Section */}
-      <View style={styles.infoSection}>
-        <Text style={styles.infoTitle}>Informations personnelles</Text>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Email :</Text>
-          <Text style={styles.infoValue}>{user?.mail || "Non renseigné"}</Text>
+        {/* Information Section */}
+        <View style={styles.infoSection}>
+          <Text style={styles.infoTitle}>Informations personnelles</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Email :</Text>
+            <Text style={styles.infoValue}>
+              {user?.mail || "Non renseigné"}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Téléphone :</Text>
+            <Text style={styles.infoValue}>{user?.num || "Non renseigné"}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Date de naissance :</Text>
+            <Text style={styles.infoValue}>
+              {formatDateToFrench(user?.birth) || "Non renseigné"}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Handicap :</Text>
+            <Text style={styles.infoValue}>
+              {user?.handicap || "Non renseigné"}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Contact d'urgence :</Text>
+            <Text style={styles.infoValue}>
+              {user?.contact_num || "Non renseigné"}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoLabel}>Email Contact d'urgence :</Text>
+            <Text style={styles.infoValue}>
+              {user?.contact_mail || "Non renseigné"}
+            </Text>
+          </View>
         </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Téléphone :</Text>
-          <Text style={styles.infoValue}>{user?.num || "Non renseigné"}</Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Date de naissance :</Text>
-          <Text style={styles.infoValue}>
-            {formatDateToFrench(user?.birth) || "Non renseigné"}
-          </Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Handicap :</Text>
-          <Text style={styles.infoValue}>
-            {user?.handicap || "Non renseigné"}
-          </Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Contact d'urgence :</Text>
-          <Text style={styles.infoValue}>
-            {user?.contact_num || "Non renseigné"}
-          </Text>
-        </View>
-        <View style={styles.infoRow}>
-          <Text style={styles.infoLabel}>Email Contact d'urgence :</Text>
-          <Text style={styles.infoValue}>
-            {user?.contact_mail || "Non renseigné"}
-          </Text>
-        </View>
-      </View>
 
-      {/* QR Code Section */}
-      <View style={styles.qrCodeSection}>
-        <Text style={styles.infoTitle}>QR Code</Text>
-        <QRCode
-          value={`https://pmrsae5.github.io/PageQRCode/client.html?name=${encodeURIComponent(
-            user?.name || "Non renseigné"
-          )}&surname=${encodeURIComponent(
-            user?.surname || "Non renseigné"
-          )}&mail=${encodeURIComponent(
-            user?.mail || "Non renseigné"
-          )}&num=${encodeURIComponent(
-            user?.num || "Non renseigné"
-          )}&handicap=${encodeURIComponent(
-            user?.handicap || "Non renseigné"
-          )}&birth=${encodeURIComponent(
-            user?.birth || "Non renseigné"
-          )}&contact_mail=${encodeURIComponent(
-            user?.contact_mail || "Non renseigné"
-          )}&contactnum=${encodeURIComponent(
-            user?.contact_num || "Non renseigné"
-          )}`}
-          size={200}
-        />
+        {/* QR Code Section */}
+        <View style={styles.qrCodeSection}>
+          <Text style={styles.infoTitle}>Votre QR Code Client</Text>
+          <QRCode
+            value={`https://pmrsae5.github.io/PageQRCode/client.html?name=${encodeURIComponent(
+              user?.name || "Non renseigné"
+            )}&surname=${encodeURIComponent(
+              user?.surname || "Non renseigné"
+            )}&mail=${encodeURIComponent(
+              user?.mail || "Non renseigné"
+            )}&num=${encodeURIComponent(
+              user?.num || "Non renseigné"
+            )}&handicap=${encodeURIComponent(
+              user?.handicap || "Non renseigné"
+            )}&birth=${encodeURIComponent(
+              user?.birth || "Non renseigné"
+            )}&contact_mail=${encodeURIComponent(
+              user?.contact_mail || "Non renseigné"
+            )}&contactnum=${encodeURIComponent(
+              user?.contact_num || "Non renseigné"
+            )}`}
+            size={200}
+          />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollcontent: {
+    flexGrow: 1,
+    paddingBottom: 120,
+  },
   container: {
     flex: 1,
     padding: 20,
@@ -112,6 +140,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerText: {
+    fontFamily: "RalewayBlack",
     fontSize: 24,
     fontWeight: "bold",
     color: "#5895D6",
@@ -128,12 +157,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   profileName: {
+    fontFamily: "RalewayBold",
     fontSize: 20,
     fontWeight: "bold",
     color: "#333",
   },
   infoSection: {
-    backgroundColor: "#ffffff",
     borderRadius: 10,
     padding: 20,
     marginBottom: 20,
@@ -144,6 +173,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   infoTitle: {
+    fontFamily: "RalewayBold",
     fontSize: 18,
     fontWeight: "bold",
     color: "#5895D6",
@@ -151,18 +181,21 @@ const styles = StyleSheet.create({
   },
   infoRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    alignItems: "center", // Aligne les éléments sur une même ligne
     marginBottom: 15,
   },
   infoLabel: {
+    fontFamily: "RalewayBold",
     fontSize: 14,
     fontWeight: "bold",
     color: "#555",
   },
   infoValue: {
+    fontFamily: "RalewayRegular",
+    marginLeft: 5,
     fontSize: 14,
     color: "#333",
-    marginTop: 5,
+    flex: 2, // Permet à la valeur d'être bien alignée avec le label
   },
   qrCodeSection: {
     alignItems: "center",

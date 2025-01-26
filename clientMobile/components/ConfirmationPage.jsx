@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import LottieView from "lottie-react-native";
+import { useNavigation } from "@react-navigation/native";
 
-const ConfirmationPage = ({ navigation }) => {
+const ConfirmationPage = () => {
+  const navigation = useNavigation();
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.navigate("Accueil"); // Remplacez "Accueil" par le nom de votre page d'accueil
@@ -12,6 +15,12 @@ const ConfirmationPage = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <LottieView
+        source={require("../assets/plane.json")} // Remplace par ton animation
+        autoPlay
+        loop={false}
+        style={{ width: 300, height: 300 }}
+      />
       <Text style={styles.message}>Votre billet a bien été confirmé !</Text>
       <Text style={styles.subMessage}>
         Vous allez être redirigé vers l'accueil dans quelques secondes...

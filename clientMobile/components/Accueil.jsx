@@ -10,8 +10,22 @@ import { UserContext } from "../UserContext";
 import LottieView from "lottie-react-native";
 import { getTickets } from "../services/api";
 import Billet from "../components/Billet";
+import {
+  useFonts,
+  Raleway_100Thin,
+  Raleway_200ExtraLight,
+  Raleway_300Light,
+  Raleway_400Regular,
+  Raleway_500Medium,
+  Raleway_600SemiBold,
+  Raleway_700Bold,
+  Raleway_800ExtraBold,
+  Raleway_900Black,
+} from "@expo-google-fonts/raleway";
+import { ThemeContext } from "../ThemeContext";
 
 export default function Accueil() {
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
   const { user } = useContext(UserContext);
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -36,6 +50,13 @@ export default function Accueil() {
 
     fetchTickets();
   }, [user]);
+
+  useFonts({
+    RalewayRegular: Raleway_400Regular,
+    RalewayBold: Raleway_700Bold,
+    RalewayExtraBold: Raleway_800ExtraBold,
+    RalewayBlack: Raleway_900Black,
+  });
 
   return (
     <FlatList
@@ -77,15 +98,14 @@ export default function Accueil() {
 const styles = StyleSheet.create({
   listContent: {
     paddingHorizontal: 10,
-    paddingTop: 100, // Ajout de la marge supérieure
-    paddingBottom: 150, // Ajout de la marge supérieure
+    paddingTop: 100,
+    paddingBottom: 150,
   },
   headerContainer: {
     alignItems: "center",
     marginBottom: 20,
   },
   textBox: {
-    backgroundColor: "#ffffff",
     borderColor: "#5895D6",
     borderWidth: 2,
     borderRadius: 10,
@@ -103,12 +123,14 @@ const styles = StyleSheet.create({
     height: 400,
   },
   welcomeText: {
+    fontFamily: "RalewayBlack",
     fontSize: 24,
     fontWeight: "bold",
     color: "#5895D6",
     textAlign: "center",
   },
   subtitle: {
+    fontFamily: "RalewayBold",
     fontSize: 18,
     fontWeight: "bold",
     color: "#333",
@@ -120,6 +142,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   noTickets: {
+    fontFamily: "RalewayRegular",
     fontSize: 16,
     color: "#999",
     textAlign: "center",
