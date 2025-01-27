@@ -2,6 +2,27 @@ import React, { useEffect, useRef } from "react";
 import { View, StyleSheet, Animated, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
+/**
+ * Composant SplashScreen.
+ * Affiche une animation d'écran de chargement avant de naviguer vers la page principale de l'application.
+ *
+ * @component
+ * @example
+ * return (
+ *   <SplashScreen />
+ * )
+ *
+ * @description
+ * - L'écran affiche une image principale et un logo tournant en boucle.
+ * - L'image principale s'affiche avec une animation de fondu au bout de 2 secondes.
+ * - Le logo tourne en continu grâce à une animation.
+ * - Après 5 secondes, l'utilisateur est redirigé vers la page "PageStart".
+ *
+ * @returns {JSX.Element} Le composant SplashScreen.
+ *
+ * @see useNavigation - Utilisé pour naviguer automatiquement après un temps de chargement.
+ */
+
 export default function SplashScreen() {
   const navigation = useNavigation();
 

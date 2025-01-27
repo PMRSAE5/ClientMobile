@@ -1,3 +1,8 @@
+/**
+ * @file Reservation3.js
+ * @description Composant pour afficher un résumé détaillé de la réservation de l'utilisateur, y compris les informations personnelles, les détails de la réservation et des QR codes générés dynamiquement.
+ */
+
 import React, { useContext, useEffect, useState } from "react";
 import {
   View,
@@ -12,11 +17,48 @@ import { UserContext } from "../UserContext";
 import QRCode from "react-native-qrcode-svg";
 import TransitionPage from "./TransitionPage";
 
+/**
+ * Composant principal Reservation3.
+ * Affiche un résumé détaillé de la réservation de l'utilisateur, comprenant :
+ * - Les informations personnelles issues du contexte utilisateur.
+ * - Les détails du billet, y compris le numéro de réservation, les lieux de départ et d'arrivée.
+ * - Les détails supplémentaires comme le nombre de bagages, les notes additionnelles, et l'utilisation de fauteuils roulants.
+ * - Les informations d'un éventuel accompagnateur.
+ * - Génère des QR codes pour la réservation et pour chaque bagage.
+ * - Permet à l'utilisateur de confirmer la réservation et d'envoyer les données à une base de données Redis.
+ *
+ * @component
+ * @example
+ * <Reservation3 route={route} navigation={navigation} />
+ *
+ * @param {Object} props - Les propriétés du composant.
+ * @param {Object} props.route - Contient les données de navigation, notamment les informations du billet.
+ * @param {Object} props.navigation - L'objet de navigation pour naviguer entre les écrans.
+ *
+ * @returns {JSX.Element} Le composant Reservation3.
+ *
+ * @description
+ * Fonctionnalités principales :
+ * - Affiche un résumé des informations utilisateur issues du contexte.
+ * - Affiche les détails de la réservation, y compris le billet, les bagages et l'accompagnateur.
+ * - Génère un QR code global pour la réservation, ainsi que des QR codes pour chaque bagage.
+ * - Envoie les données de la réservation à un serveur Redis via une API.
+ * - Gère les erreurs (données manquantes) avec une interface utilisateur adaptée.
+ * - Simule une transition avec un écran de chargement (TransitionPage) avant d'afficher le contenu principal.
+ */
+
 const Reservation3 = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const { billet } = route.params || {};
   const { user } = useContext(UserContext);
 
+  /**
+   * Effet useEffect.
+   * Simule une période de transition de 5 secondes avant d'afficher le contenu principal.
+   *
+   * @function
+   * @returns {void}
+   */
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false); // Bascule sur le contenu après 5 secondes
@@ -49,6 +91,14 @@ const Reservation3 = ({ route, navigation }) => {
 
   console.log("Utilisateur :", user);
 
+  /**
+   * Données pour le QR code global.
+   * Contient les informations principales de la réservation, y compris les informations utilisateur,
+   * les détails du billet, le nombre de bagages, et les options liées au fauteuil roulant.
+   *
+   * @constant
+   * @type {string}
+   */
   const qrData = `https://pmrsae5.github.io/PageQRCode/?nom=${encodeURIComponent(
     user?.name || "Non renseigné"
   )}&prenom=${encodeURIComponent(
@@ -66,6 +116,17 @@ const Reservation3 = ({ route, navigation }) => {
       .filter((key) => billet?.wheelchair[key])
       .join(", ") || "Non"
   )}`;
+
+  /**
+   * Fonction handleConfirm.
+   * Envoie les données de la réservation (billet, utilisateur, etc.) à un serveur Redis via une API.
+   * Confirme la réservation et redirige l'utilisateur vers l'écran de confirmation.
+   * Affiche un message d'erreur en cas de problème avec l'envoi des données.
+   *
+   * @async
+   * @function
+   * @returns {Promise<void>}
+   */
 
   const handleConfirm = async () => {
     try {
@@ -87,6 +148,12 @@ const Reservation3 = ({ route, navigation }) => {
           body: JSON.stringify(dataToSend),
         }
       );
+
+      /**
+       * Gestion des erreurs de données manquantes.
+       * Si aucune donnée de billet n'est fournie via la navigation, un message d'erreur est affiché
+       * et l'utilisateur peut revenir en arrière pour corriger le problème.
+       */
 
       const result = await response.json();
       if (response.ok) {

@@ -1,3 +1,8 @@
+/**
+ * @file Settings.js
+ * @description Interface utilisateur permettant de configurer les paramètres de l'application, y compris le mode sombre, les notifications, la langue et d'autres options utilisateur.
+ */
+
 import React, { useContext, useState } from "react";
 import {
   View,
@@ -25,6 +30,34 @@ import {
   Raleway_900Black,
 } from "@expo-google-fonts/raleway";
 import LottieView from "lottie-react-native";
+
+/**
+ * Composant principal Settings.
+ * Fournit une interface utilisateur pour configurer différents paramètres liés à l'application et à l'utilisateur.
+ *
+ * @component
+ * @example
+ * <Settings onLogout={handleLogout} />
+ *
+ * @param {Object} props - Les propriétés du composant.
+ * @param {Function} props.onLogout - Fonction appelée lorsque l'utilisateur se déconnecte.
+ *
+ * @returns {JSX.Element} Le composant Settings.
+ *
+ * @description
+ * Fonctionnalités principales :
+ * - **Mode sombre** : Permet à l'utilisateur d'activer ou de désactiver le mode sombre via un interrupteur.
+ * - **Langue de l'application** : Propose un choix de langue parmi plusieurs options (Français, Anglais, Espagnol).
+ * - **Notifications** : Permet d'activer ou de désactiver les notifications via un interrupteur.
+ * - **Modifier le mot de passe** : L'utilisateur peut accéder à une option pour changer son mot de passe.
+ * - **Modifier le profil** : Redirige vers une page où l'utilisateur peut éditer ses informations personnelles.
+ * - **À propos de l'application** : Affiche des informations sur la version de l'application et la politique de confidentialité.
+ * - **Support** : Fournit les coordonnées du support client.
+ * - **Déconnexion** : Propose une alerte pour confirmer la déconnexion et redirige l'utilisateur vers l'écran de connexion.
+ *
+ * @see ThemeContext - Gère le mode sombre dans l'application.
+ * @see UserContext - Gère l'état de l'utilisateur connecté.
+ */
 
 export default function Settings({ onLogout }) {
   const { setUser } = useContext(UserContext);

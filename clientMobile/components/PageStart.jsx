@@ -1,3 +1,8 @@
+/**
+ * @file PageStart.js
+ * @description Page d'accueil animée avec logo, texte et boutons de navigation.
+ */
+
 import React, { useRef, useEffect } from "react";
 import { View, StyleSheet, Animated, Easing } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -14,6 +19,22 @@ import {
   Raleway_800ExtraBold,
   Raleway_900Black,
 } from "@expo-google-fonts/raleway";
+
+/**
+ * Composant PageStart.
+ * Page d'accueil de l'application avec un logo animé, une phrase d'accroche et des boutons de navigation.
+ *
+ * @component
+ * @example
+ * return (
+ *   <PageStart navigation={navigation} />
+ * )
+ *
+ * @param {Object} props - Les propriétés du composant.
+ * @param {Object} props.navigation - L'objet de navigation pour naviguer entre les écrans.
+ *
+ * @returns {JSX.Element} Le composant PageStart.
+ */
 
 export default function PageStart({ navigation }) {
   const scaleAnim = useRef(new Animated.Value(1)).current;

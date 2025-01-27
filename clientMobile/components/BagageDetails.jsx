@@ -1,4 +1,18 @@
-import React, { useState } from "react";
+/**
+ * Composant BagageDetails.
+ * Gère l'ajout, la suppression et l'affichage des détails des bagages pour un billet spécifique.
+ * Affiche également les restrictions spécifiques au transport sélectionné et génère un QR code pour chaque bagage ajouté.
+ *
+ * @component
+ * @param {Object} props - Les propriétés du composant.
+ * @param {Object} props.route - L'objet de navigation contenant les paramètres passés à la route.
+ * @param {Object} props.route.params - Les paramètres passés à la route.
+ * @param {Object} props.route.params.billet - Les informations du billet, incluant le transport et le nombre de bagages.
+ *
+ * @returns {JSX.Element} Le composant pour gérer les détails des bagages.
+ */
+
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,22 +26,58 @@ import QRCode from "react-native-qrcode-svg";
 import { useNavigation } from "@react-navigation/native";
 import {
   useFonts,
-  Raleway_100Thin,
-  Raleway_200ExtraLight,
-  Raleway_300Light,
   Raleway_400Regular,
   Raleway_500Medium,
-  Raleway_600SemiBold,
   Raleway_700Bold,
   Raleway_800ExtraBold,
   Raleway_900Black,
 } from "@expo-google-fonts/raleway";
 import LottieView from "lottie-react-native";
-import { useEffect } from "react";
 import TransitionPage from "./TransitionPage";
+
+/**
+ * Restrictions relatives aux bagages en fonction du transport sélectionné.
+ *
+ * @constant
+ * @type {Object}
+ * @property {Object} SNCF - Restrictions pour la SNCF.
+ * @property {Object} RATP - Restrictions pour la RATP.
+ * @property {Object} AirFrance - Restrictions pour Air France.
+ */
+const bagageRestrictions = {
+  SNCF: {
+    info: `Depuis le 15 septembre 2024, chaque voyageur peut transporter :
+- 2 bagages (max. 70 x 90 x 50 cm)
+- 1 bagage à main (max. 40 x 30 x 15 cm)
+Tous les bagages doivent être étiquetés et portés en une fois. Non-conformité : 50 € par bagage, 150 € si obstruction.`,
+  },
+  RATP: {
+    info: `Le bagage ne doit pas dépasser les 15kg, l'agent sera en interdiction de le porter. La RATP recommande des bagages de taille raisonnable pour ne pas gêner les passagers, surtout aux heures de pointe. Les bagages doivent être placés sans obstruer les allées ou les portes.`,
+  },
+  AirFrance: {
+    info: `Conditions selon la cabine choisie :
+Bagage cabine :
+- Economy : 1 bagage cabine + 1 accessoire (max. 12 kg)
+- Premium/Business/La Première : jusqu'à 2 bagages cabine et 1 accessoire (max. 18 kg).
+Bagage en soute :
+- Economy : 1 bagage (max. 23 kg)
+- Premium Economy : 2 bagages (max. 23 kg chacun)
+- Business : 2 bagages (max. 32 kg chacun)
+- La Première : 3 bagages (max. 32 kg chacun)
+Dimensions soute : max. 158 cm (L+l+H).`,
+  },
+};
 
 const BagageDetails = ({ route }) => {
   const [loading, setLoading] = useState(true);
+  const { billet } = route.params || {};
+  const [bagages, setBagages] = useState([]);
+  const [bagageDetails, setBagageDetails] = useState({
+    weight: "",
+    description: "",
+  });
+  const navigation = useNavigation();
+
   useFonts({
     RalewayRegular: Raleway_400Regular,
     RalewayMedium: Raleway_500Medium,
@@ -36,58 +86,34 @@ const BagageDetails = ({ route }) => {
     RalewayBlack: Raleway_900Black,
   });
 
-  console.log(route.params.billet);
-
-  const { billet } = route.params || {};
-  const [bagages, setBagages] = useState([]);
-  const [bagageDetails, setBagageDetails] = useState({
-    weight: "",
-    description: "",
-  });
-  const navigation = useNavigation();
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLoading(false); // Bascule sur le contenu après 5 secondes
+      setLoading(false);
     }, 5000);
-
-    return () => clearTimeout(timer); // Nettoie le timer au démontage
+    return () => clearTimeout(timer);
   }, []);
 
   if (loading) {
-    // Affiche la page de transition si loading est true
     return <TransitionPage />;
   }
 
-  const bagageRestrictions = {
-    SNCF: {
-      info: `Depuis le 15 septembre 2024, chaque voyageur peut transporter :\n
-- 2 bagages (max. 70 x 90 x 50 cm)\n
-- 1 bagage à main (max. 40 x 30 x 15 cm)\n
-Tous les bagages doivent être étiquetés et portés en une fois. Non-conformité : 50 € par bagage, 150 € si obstruction.`,
-    },
-    RATP: {
-      info: `Le bagage ne doit pas dépasser les 15kg, l'agent sera en interdiction de le porter. La RATP recommande des bagages de taille raisonnable pour ne pas gêner les passagers, surtout aux heures de pointe. Les bagages doivent être placés sans obstruer les allées ou les portes.`,
-    },
-    AirFrance: {
-      info: `Conditions selon la cabine choisie :\n
-Bagage cabine :\n
-- Economy : 1 bagage cabine + 1 accessoire (max. 12 kg)\n
-- Premium/Business/La Première : jusqu'à 2 bagages cabine et 1 accessoire (max. 18 kg).\n
-Bagage en soute :\n
-- Economy : 1 bagage (max. 23 kg)\n
-- Premium Economy : 2 bagages (max. 23 kg chacun)\n
-- Business : 2 bagages (max. 32 kg chacun)\n
-- La Première : 3 bagages (max. 32 kg chacun)\n
-Dimensions soute : max. 158 cm (L+l+H).`,
-    },
-  };
-
   const selectedTransport = billet?.transport;
 
-  const generateUniqueId = () => {
-    return `id_${Math.random().toString(36).substr(2, 9)}`;
-  };
+  /**
+   * Génère un identifiant unique pour chaque bagage.
+   *
+   * @function generateUniqueId
+   * @returns {string} Un identifiant unique pour le bagage.
+   */
+  const generateUniqueId = () =>
+    `id_${Math.random().toString(36).substr(2, 9)}`;
 
+  /**
+   * Ajoute un bagage à la liste des bagages.
+   * Vérifie que tous les champs sont remplis et que le nombre de bagages n'excède pas la limite définie par le billet.
+   *
+   * @function handleAddBagage
+   */
   const handleAddBagage = () => {
     if (!bagageDetails.weight || !bagageDetails.description) {
       Alert.alert("Erreur", "Veuillez remplir tous les champs pour le bagage.");
@@ -109,14 +135,16 @@ Dimensions soute : max. 158 cm (L+l+H).`,
     };
 
     setBagages([...bagages, newBagage]);
-    setBagageDetails({
-      weight: "",
-      description: "",
-    });
-
+    setBagageDetails({ weight: "", description: "" });
     Alert.alert("Succès", "Le bagage a été ajouté avec succès !");
   };
 
+  /**
+   * Supprime un bagage de la liste.
+   *
+   * @function handleDeleteBagage
+   * @param {string} id - L'identifiant unique du bagage à supprimer.
+   */
   const handleDeleteBagage = (id) => {
     setBagages((prevBagages) =>
       prevBagages.filter((bagage) => bagage.id_bagage !== id)
@@ -124,6 +152,11 @@ Dimensions soute : max. 158 cm (L+l+H).`,
     Alert.alert("Bagage supprimé", "Le bagage a été supprimé avec succès !");
   };
 
+  /**
+   * Vérifie si tous les bagages requis ont été ajoutés et navigue vers l'écran suivant.
+   *
+   * @function handleContinue
+   */
   const handleContinue = () => {
     if (bagages.length !== parseInt(billet.numBags, 10)) {
       Alert.alert(
@@ -132,10 +165,7 @@ Dimensions soute : max. 158 cm (L+l+H).`,
       );
       return;
     }
-    const updatedBillet = {
-      ...billet,
-      bagages,
-    };
+    const updatedBillet = { ...billet, bagages };
     navigation.navigate("Reservation3", { billet: updatedBillet });
   };
 

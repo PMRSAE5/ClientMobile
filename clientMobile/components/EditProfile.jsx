@@ -1,3 +1,8 @@
+/**
+ * @file EditProfile.js
+ * @description Ce fichier contient le composant EditProfile, qui permet à un utilisateur de modifier son profil.
+ */
+
 import React, { useContext, useState } from "react";
 import {
   View,
@@ -29,6 +34,22 @@ import {
   Raleway_900Black,
 } from "@expo-google-fonts/raleway";
 
+/**
+ * Composant EditProfile.
+ * Permet à l'utilisateur de modifier son profil en mettant à jour des informations comme le prénom, le nom, l'email, etc.
+ *
+ * @component
+ * @example
+ * return (
+ *   <EditProfile />
+ * )
+ *
+ * @param {Object} props - Les propriétés du composant.
+ * @param {Object} props.navigation - L'objet de navigation pour permettre de revenir en arrière.
+ *
+ * @returns {JSX.Element} Le composant EditProfile.
+ */
+
 export default function EditProfile({ navigation }) {
   const { user, setUser } = useContext(UserContext);
   const [name, setName] = useState(user?.name || "");
@@ -56,6 +77,15 @@ export default function EditProfile({ navigation }) {
     { label: "WCHC : Assistance complète nécessaire", value: "6" },
     { label: "MAAS : Assistance spécifique", value: "7" },
   ];
+
+  /**
+   * Met à jour les informations de l'utilisateur via l'API.
+   * En cas de succès, met à jour le contexte utilisateur et retourne à la page précédente.
+   *
+   * @async
+   * @function handleUpdate
+   * @returns {Promise<void>}
+   */
 
   const handleUpdate = async () => {
     try {
@@ -91,6 +121,14 @@ export default function EditProfile({ navigation }) {
       Alert.alert("Erreur", "Une erreur est survenue lors de la mise à jour.");
     }
   };
+
+  /**
+   * Formate une date en chaîne lisible en français.
+   *
+   * @function formatDateToFrench
+   * @param {string} dateString - La date au format ISO.
+   * @returns {string} La date formatée en français.
+   */
 
   const formatDateToFrench = (dateString) => {
     if (!dateString) return "Non renseigné";

@@ -1,3 +1,8 @@
+/**
+ * @file Billet.js
+ * @description Composant pour afficher les détails d'un billet. Permet de naviguer vers la page des détails du billet.
+ */
+
 import React from "react";
 import {
   View,
@@ -21,6 +26,47 @@ import {
   Raleway_900Black,
 } from "@expo-google-fonts/raleway";
 
+/**
+ * @typedef {Object} Ticket
+ * @property {string} lieu_depart - Lieu de départ du billet.
+ * @property {string} lieu_arrivee - Lieu d'arrivée du billet.
+ * @property {string} heure_depart - Date et heure de départ au format ISO.
+ * @property {string} heure_arrivee - Date et heure d'arrivée au format ISO.
+ * @property {string} transport - Type de transport utilisé (SNCF, RATP, AirFrance, etc.).
+ * @property {string} name - Nom de l'utilisateur associé au billet.
+ * @property {string} surname - Prénom de l'utilisateur associé au billet.
+ * @property {Object} companion - Informations sur l'accompagnateur (si présent).
+ * @property {string} companion.name - Nom de l'accompagnateur.
+ * @property {string} companion.surname - Prénom de l'accompagnateur.
+ * @property {string} wheelchair - Type de fauteuil roulant demandé pour l'assistance.
+ */
+
+/**
+ * Composant Billet.
+ * Affiche les détails d'un billet avec les informations telles que le lieu de départ, d'arrivée, l'heure et d'autres informations spécifiques.
+ * Permet de naviguer vers une page avec plus de détails sur le billet.
+ *
+ * @component
+ * @example
+ * const ticket = {
+ *   lieu_depart: "Paris",
+ *   lieu_arrivee: "Lyon",
+ *   heure_depart: "2025-01-26T08:00:00Z",
+ *   heure_arrivee: "2025-01-26T12:00:00Z",
+ *   transport: "SNCF",
+ *   name: "John",
+ *   surname: "Doe",
+ *   companion: { name: "Jane", surname: "Smith" },
+ *   wheelchair: "RM",
+ * };
+ * return <Billet ticket={ticket} />;
+ *
+ * @param {Object} props - Propriétés du composant.
+ * @param {Ticket} props.ticket - Détails du billet à afficher.
+ *
+ * @returns {JSX.Element} Le composant Billet.
+ */
+
 const Billet = ({ ticket }) => {
   console.log("Détails du ticket :", ticket);
 
@@ -31,6 +77,13 @@ const Billet = ({ ticket }) => {
     RalewayExtraBold: Raleway_800ExtraBold,
     RalewayBlack: Raleway_900Black,
   });
+
+  /**
+   * Formate une chaîne de date ISO en une date et une heure lisibles.
+   *
+   * @param {string} isoString - Chaîne de date ISO.
+   * @returns {{ date: string, time: string }} Un objet contenant la date et l'heure formatées.
+   */
 
   const formatDateTime = (isoString) => {
     if (!isoString)

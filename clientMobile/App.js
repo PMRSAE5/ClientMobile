@@ -5,7 +5,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import NetInfo from "@react-native-community/netinfo"; // Importer NetInfo
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Pour stocker les données hors-ligne
 import Toast from "react-native-toast-message";
-
 import { UserProvider } from "./UserContext";
 import PageStart from "./components/PageStart.jsx";
 import Connexion from "./components/Connexion";

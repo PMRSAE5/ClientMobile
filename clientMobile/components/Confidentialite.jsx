@@ -1,5 +1,23 @@
+/**
+ * @file Confidentialite.js
+ * @description Composant affichant la politique de confidentialité de l'application PMove.
+ */
+
 import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
+
+/**
+ * Composant Confidentialite.
+ * Ce composant présente la politique de confidentialité de l'application PMove, incluant les sections sur la collecte de données, leur utilisation, la sécurité, et les droits des utilisateurs.
+ *
+ * @component
+ * @example
+ * return (
+ *   <Confidentialite />
+ * )
+ *
+ * @returns {JSX.Element} Le composant Confidentialite.
+ */
 
 export default function Confidentialite() {
   return (

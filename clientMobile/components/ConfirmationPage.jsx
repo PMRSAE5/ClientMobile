@@ -1,7 +1,26 @@
+/**
+ * @file ConfirmationPage.js
+ * @description Ce fichier contient le composant ConfirmationPage, utilisé pour afficher une animation de confirmation et rediriger l'utilisateur vers la page d'accueil après un délai.
+ */
+
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import LottieView from "lottie-react-native";
 import { useNavigation } from "@react-navigation/native";
+
+/**
+ * Composant ConfirmationPage.
+ * Ce composant affiche une animation confirmant la réussite d'une action (par exemple, la confirmation d'un billet).
+ * Une fois l'animation terminée, l'utilisateur est automatiquement redirigé vers la page d'accueil après 5 secondes.
+ *
+ * @component
+ * @example
+ * return (
+ *   <ConfirmationPage />
+ * )
+ *
+ * @returns {JSX.Element} Le composant ConfirmationPage.
+ */
 
 const ConfirmationPage = () => {
   const navigation = useNavigation();

@@ -1,3 +1,8 @@
+/**
+ * @file BilletDetails.js
+ * @description Composant affichant les détails complets d'un billet, y compris les informations de réservation, les bagages associés, et un QR Code.
+ */
+
 import React from "react";
 import {
   View,
@@ -24,6 +29,67 @@ import {
   Raleway_800ExtraBold,
   Raleway_900Black,
 } from "@expo-google-fonts/raleway";
+
+/**
+ * @typedef {Object} Bagage
+ * @property {string} weight - Poids du bagage.
+ * @property {string} description - Description du bagage.
+ */
+
+/**
+ * @typedef {Object} Companion
+ * @property {string} name - Nom de l'accompagnateur.
+ * @property {string} surname - Prénom de l'accompagnateur.
+ * @property {string} phone - Numéro de téléphone de l'accompagnateur.
+ * @property {string} email - Adresse email de l'accompagnateur.
+ */
+
+/**
+ * @typedef {Object} Billet
+ * @property {string} num_reservation - Numéro unique de la réservation.
+ * @property {string} lieu_depart - Lieu de départ du voyage.
+ * @property {string} lieu_arrivee - Lieu d'arrivée du voyage.
+ * @property {string} heure_depart - Heure de départ au format ISO.
+ * @property {string} heure_arrivee - Heure d'arrivée au format ISO.
+ * @property {string} wheelchair - Type de fauteuil roulant demandé.
+ * @property {string} additionalInfo - Informations supplémentaires.
+ * @property {number} numBags - Nombre de bagages associés à la réservation.
+ * @property {boolean} hasCompanion - Indique si un accompagnateur est présent.
+ * @property {Companion} companion - Informations sur l'accompagnateur.
+ * @property {Bagage[]} bagages - Liste des bagages associés.
+ */
+
+/**
+ * Composant BilletDetails.
+ * Ce composant affiche les détails d'un billet de réservation, y compris les informations sur le voyage, les bagages et l'accompagnateur.
+ * Il permet également de supprimer la réservation via un appel API.
+ *
+ * @component
+ * @example
+ * const billet = {
+ *   num_reservation: "101",
+ *   lieu_depart: "Paris",
+ *   lieu_arrivee: "Lyon",
+ *   heure_depart: "2025-01-26T08:00:00Z",
+ *   heure_arrivee: "2025-01-26T12:00:00Z",
+ *   wheelchair: "RM",
+ *   additionalInfo: "Besoin d'assistance spéciale.",
+ *   numBags: 2,
+ *   hasCompanion: true,
+ *   companion: { name: "John", surname: "Doe", phone: "1234567890", email: "john.doe@example.com" },
+ *   bagages: [
+ *     { weight: "12", description: "Valise rouge" },
+ *     { weight: "8", description: "Sac à dos noir" },
+ *   ],
+ * };
+ * return <BilletDetails billet={billet} />;
+ *
+ * @param {Object} props - Propriétés du composant.
+ * @param {Object} props.route - L'objet de navigation contenant les paramètres de la route.
+ * @param {Billet} props.route.params.billet - Les détails du billet.
+ *
+ * @returns {JSX.Element} Le composant BilletDetails.
+ */
 
 const BilletDetails = ({ route }) => {
   const billet = route?.params?.billet;
@@ -58,6 +124,10 @@ const BilletDetails = ({ route }) => {
   )}&arrivee=${encodeURIComponent(
     billet.lieu_arrivee || "Non renseigné"
   )}&bagages=${encodeURIComponent(billet.numBags || "0")}`;
+
+  /**
+   * Gère la suppression d'une réservation en appelant une API.
+   */
 
   const handleDeleteReservation = async () => {
     Alert.alert(

@@ -1,3 +1,8 @@
+/**
+ * @file Reservation2.js
+ * @description Composant permettant de collecter des informations supplémentaires pour la réservation.
+ */
+
 import React, { useContext, useState, useEffect } from "react";
 import {
   View,
@@ -27,6 +32,41 @@ import {
 import LottieView from "lottie-react-native";
 import TransitionPage from "./TransitionPage";
 
+/**
+ * Composant principal Reservation2.
+ * Permet à l'utilisateur de fournir des informations supplémentaires pour personnaliser son assistance
+ * lors de son voyage, telles que :
+ * - Les détails d'un accompagnateur (nom, prénom, téléphone, email).
+ * - Le nombre de bagages.
+ * - Les options liées à l'utilisation de fauteuils roulants.
+ * - Une description additionnelle pour des besoins spécifiques.
+ * Les informations collectées sont ajoutées au billet existant et transmises à l'étape suivante.
+ *
+ * @component
+ * @example
+ * <Reservation2 route={route} />
+ *
+ * @param {Object} props - Les propriétés du composant.
+ * @param {Object} props.route - Contient les données de navigation, y compris le billet en cours de modification.
+ *
+ * @returns {JSX.Element} Le composant Reservation2.
+ *
+ * @description
+ * Fonctionnalités principales :
+ * - Collecte des informations sur un éventuel accompagnateur.
+ * - Spécification du nombre de bagages transportés.
+ * - Sélection d'une option liée à l'utilisation de fauteuils roulants.
+ * - Fourniture d'informations complémentaires dans un champ texte.
+ * - Transition avec un écran de chargement initial simulant un temps de traitement.
+ * - Validation des entrées utilisateur (exemple : vérifier que le nombre de bagages est spécifié).
+ * - Navigation vers la prochaine étape avec les données mises à jour.
+ *
+ * @requires react-native
+ * @requires react-native-gesture-handler
+ * @requires react-navigation/native
+ * @requires LottieView - Pour les animations visuelles (fauteuil roulant).
+ */
+
 export default function Reservation2({ route }) {
   const navigation = useNavigation();
   const { user, setUser } = useContext(UserContext); // Utilisation du contexte utilisateur
@@ -52,6 +92,14 @@ export default function Reservation2({ route }) {
     RalewayBlack: Raleway_900Black,
   });
 
+  /**
+   * Effet useEffect.
+   * Simule un écran de transition pendant 5 secondes avant d'afficher les formulaires.
+   *
+   * @function
+   * @returns {void}
+   */
+
   // Simule une période de transition (5 secondes)
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -65,6 +113,16 @@ export default function Reservation2({ route }) {
     // Affiche la page de transition si loading est true
     return <TransitionPage />;
   }
+
+  /**
+   * Fonction handleSubmit.
+   * Gère la validation des données et la navigation vers l'étape suivante.
+   * Si l'utilisateur n'a pas de bagages, il est redirigé immédiatement.
+   * Sinon, les données collectées sont fusionnées avec les informations du billet existant.
+   *
+   * @function
+   * @returns {void}
+   */
 
   const handleSubmit = () => {
     if (!numBags) {
@@ -132,6 +190,25 @@ export default function Reservation2({ route }) {
     navigation.navigate("BagageDetails", { billet: updatedBillet });
   };
 
+  /**
+   * Champ "Avez-vous un accompagnateur ?".
+   * Permet de choisir entre "Oui" ou "Non". Si "Oui", affiche des champs pour renseigner
+   * les informations de l'accompagnateur (nom, prénom, téléphone, email).
+   *
+   * Champ "Nombre de bagages".
+   * Permet à l'utilisateur de spécifier le nombre de bagages transportés.
+   * Une validation est effectuée pour garantir que cette information est fournie.
+   *
+   * Champ "Utilisation d'un fauteuil roulant".
+   * Propose trois options :
+   * - RM : Fauteuil roulant manuel.
+   * - RE : Fauteuil roulant électrique.
+   * - Emprunt : Utilisation d'un fauteuil roulant emprunté.
+   *
+   * Champ "Informations complémentaires".
+   * Permet à l'utilisateur de décrire toute situation spécifique nécessitant une assistance
+   * personnalisée.
+   */
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}

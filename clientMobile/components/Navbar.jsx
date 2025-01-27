@@ -1,3 +1,8 @@
+/**
+ * @file NavBar.js
+ * @description Barre de navigation animée pour naviguer entre les différents écrans.
+ */
+
 import React, { useState, useRef } from "react";
 import {
   View,
@@ -22,6 +27,19 @@ import {
   Raleway_900Black,
 } from "@expo-google-fonts/raleway";
 
+/**
+ * Composant NavBar.
+ * Barre de navigation personnalisée avec un effet animé pour indiquer la sélection active.
+ * Chaque bouton de navigation est animé lorsqu'il est sélectionné.
+ *
+ * @component
+ * @example
+ * return (
+ *   <NavBar />
+ * )
+ *
+ * @returns {JSX.Element} La barre de navigation animée.
+ */
 const NavBar = () => {
   const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = useState(0); // Commence par Home
@@ -40,6 +58,12 @@ const NavBar = () => {
       translateYText: useRef(new Animated.Value(0)).current,
     }));
 
+  /**
+   * Gère la navigation entre les écrans et l'animation des boutons.
+   *
+   * @param {number} index - L'index de l'élément sélectionné.
+   * @param {string} route - Le nom de la route à naviguer.
+   */
   const handleNavigation = (index, route) => {
     setActiveIndex(index);
 

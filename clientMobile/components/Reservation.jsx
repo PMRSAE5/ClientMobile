@@ -1,3 +1,8 @@
+/**
+ * @file Reservation.js
+ * @description Permet de vérifier une réservation ou d'accéder à des options de réservation externes.
+ */
+
 import React, { useState } from "react";
 import {
   View,
@@ -27,6 +32,32 @@ import {
   Raleway_900Black,
 } from "@expo-google-fonts/raleway";
 
+/**
+ * Composant Reservation.
+ * Gère la sélection d'un transport, la vérification d'une réservation existante
+ * et affiche les détails du billet si une réservation est trouvée.
+ * Fournit également des liens pour effectuer une réservation sur des plateformes externes.
+ *
+ * @component
+ * @example
+ * return (
+ *   <Reservation />
+ * )
+ *
+ * @returns {JSX.Element} Le composant Reservation.
+ *
+ * @description
+ * Ce composant permet aux utilisateurs de :
+ * - Sélectionner un mode de transport (RATP, SNCF, AirFrance).
+ * - Saisir un numéro de réservation.
+ * - Vérifier l'existence de cette réservation via une API.
+ * - Afficher les détails du billet si la réservation est trouvée.
+ * - Naviguer vers d'autres pages pour effectuer une réservation si nécessaire.
+ * - Interagir avec une animation et des options de navigation dynamiques.
+ *
+ * @param {Object} props - Les propriétés du composant.
+ */
+
 export default function Reservation() {
   const navigation = useNavigation();
   const [selectedTransport, setSelectedTransport] = useState(null);
@@ -53,9 +84,23 @@ export default function Reservation() {
     RalewayBlack: Raleway_900Black,
   });
 
+  /**
+   * Sélectionne une option de transport.
+   *
+   * @param {string} option - L'option de transport sélectionnée.
+   */
   const handleTransportSelect = (option) => {
     setSelectedTransport(option);
   };
+
+  /**
+   * Vérifie une réservation en fonction du numéro de réservation et de l'option de transport sélectionnée.
+   * Affiche une alerte en cas de succès ou d'erreur.
+   *
+   * @async
+   * @function
+   * @returns {Promise<void>}
+   */
 
   const handleCheckReservation = async () => {
     if (!numReservation || !selectedTransport) {

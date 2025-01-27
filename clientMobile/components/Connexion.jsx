@@ -1,3 +1,8 @@
+/**
+ * @file Connexion.js
+ * @description Ce fichier contient le composant Connexion, utilisé pour permettre à un utilisateur de se connecter à l'application. Il offre également des options pour la connexion via des réseaux sociaux.
+ */
+
 import React, { useState, useContext } from "react";
 import {
   View,
@@ -24,6 +29,25 @@ import {
   Raleway_900Black,
 } from "@expo-google-fonts/raleway";
 
+/**
+ * Composant Connexion.
+ * Permet à un utilisateur de se connecter à l'application avec des champs pour l'email et le mot de passe.
+ * Offre également des options de connexion via des réseaux sociaux.
+ * Après une connexion réussie, redirige vers la page d'accueil ou exécute une fonction de callback.
+ *
+ * @component
+ * @example
+ * return (
+ *   <Connexion navigation={navigation} onLoginSuccess={onLoginSuccess} />
+ * )
+ *
+ * @param {Object} props - Les propriétés du composant.
+ * @param {Object} props.navigation - L'objet de navigation pour naviguer entre les écrans.
+ * @param {Function} [props.onLoginSuccess] - Fonction appelée après une connexion réussie.
+ *
+ * @returns {JSX.Element} Le composant de connexion.
+ */
+
 export default function Connexion({ navigation, onLoginSuccess }) {
   const [mail, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,6 +59,15 @@ export default function Connexion({ navigation, onLoginSuccess }) {
     RalewayExtraBold: Raleway_800ExtraBold,
     RalewayBlack: Raleway_900Black,
   });
+
+  /**
+   * Gère la tentative de connexion de l'utilisateur.
+   * Vérifie les champs, interroge l'API pour valider les informations et met à jour le contexte utilisateur en cas de succès.
+   *
+   * @async
+   * @function handleLogin
+   * @returns {Promise<void>}
+   */
 
   const handleLogin = async () => {
     console.log("Début de la méthode handleLogin.");
@@ -214,7 +247,7 @@ const styles = StyleSheet.create({
   forgotPassword: {
     fontFamily: "RalewayBlack",
     fontSize: 14,
-    color: "#007bff",
+    color: "#e53  ",
     textAlign: "right",
     marginBottom: 20,
   },

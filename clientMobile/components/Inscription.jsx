@@ -1,3 +1,8 @@
+/**
+ * @file Inscription.js
+ * @description Ce composant gère l'inscription des utilisateurs en collectant leurs informations personnelles via un formulaire.
+ */
+
 import React, { useState } from "react";
 import {
   View,
@@ -23,6 +28,22 @@ import {
   Raleway_900Black,
 } from "@expo-google-fonts/raleway";
 import { useNavigation } from "@react-navigation/native";
+
+/**
+ * Composant Inscription.
+ * Permet à un utilisateur de s'inscrire en remplissant un formulaire avec validation et options dynamiques.
+ *
+ * @component
+ * @example
+ * return (
+ *   <Inscription navigation={navigation} />
+ * )
+ *
+ * @param {Object} props - Les propriétés du composant.
+ * @param {Object} props.navigation - L'objet de navigation pour permettre la navigation entre les écrans.
+ *
+ * @returns {JSX.Element} Le composant Inscription.
+ */
 
 const API_BASE_URL = "http://172.20.10.2:3000";
 
@@ -56,6 +77,14 @@ export default function Inscription({ navigation }) {
     RalewayBlack: Raleway_900Black,
   });
 
+  /**
+   * Met à jour les données du formulaire en fonction de l'entrée utilisateur.
+   *
+   * @function handleChange
+   * @param {string} name - Le nom du champ.
+   * @param {string} value - La valeur saisie.
+   */
+
   const handleChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
   };
@@ -75,6 +104,13 @@ export default function Inscription({ navigation }) {
     { label: "WCHC : Assistance complète nécessaire", value: "6" },
     { label: "MAAS : Assistance spécifique", value: "7" },
   ];
+
+  /**
+   * Gère l'envoi des données du formulaire d'inscription à l'API.
+   *
+   * @async
+   * @function handleSubmit
+   */
 
   const handleSubmit = async () => {
     console.log("Début de la méthode handleSubmit...");
@@ -227,28 +263,6 @@ export default function Inscription({ navigation }) {
         </View>
       </View>
 
-      <View style={styles.row}>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Contact Mail</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Contact Mail"
-            value={formData.contact_mail}
-            onChangeText={(value) => handleChange("contact_mail", value)}
-          />
-        </View>
-        <View style={styles.inputWrapper}>
-          <Text style={styles.label}>Contact Num</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Contact Num"
-            keyboardType="phone-pad"
-            value={formData.contact_num}
-            onChangeText={(value) => handleChange("contact_num", value)}
-          />
-        </View>
-      </View>
-
       {/* Champs Email et Numéro */}
       <View style={styles.row}>
         <View style={styles.inputWrapper}>
@@ -269,6 +283,28 @@ export default function Inscription({ navigation }) {
             keyboardType="phone-pad"
             value={formData.num}
             onChangeText={(value) => handleChange("num", value)}
+          />
+        </View>
+      </View>
+
+      <View style={styles.row}>
+        <View style={styles.inputWrapper}>
+          <Text style={styles.label}>Contact Mail</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Contact Mail"
+            value={formData.contact_mail}
+            onChangeText={(value) => handleChange("contact_mail", value)}
+          />
+        </View>
+        <View style={styles.inputWrapper}>
+          <Text style={styles.label}>Contact Num</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Contact Num"
+            keyboardType="phone-pad"
+            value={formData.contact_num}
+            onChangeText={(value) => handleChange("contact_num", value)}
           />
         </View>
       </View>

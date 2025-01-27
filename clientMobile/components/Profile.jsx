@@ -1,3 +1,8 @@
+/**
+ * @file Profile.js
+ * @bref Composant affichant les informations de l'utilisateur, un QR Code généré dynamiquement, et une mise en page claire et élégante.
+ */
+
 import React, { useContext } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { UserContext } from "../UserContext";
@@ -17,6 +22,19 @@ import {
   Raleway_900Black,
 } from "@expo-google-fonts/raleway";
 
+/**
+ * Composant Profile.
+ * Affiche les informations personnelles de l'utilisateur et un QR Code contenant ses données.
+ *
+ * @component
+ * @example
+ * return (
+ *   <Profile />
+ * )
+ *
+ * @returns {JSX.Element} Le composant Profile.
+ */
+
 export default function Profile() {
   useFonts({
     RalewayRegular: Raleway_400Regular,
@@ -26,6 +44,13 @@ export default function Profile() {
   });
 
   const { user } = useContext(UserContext);
+
+  /**
+   * Formate une chaîne de date en une date lisible en français.
+   *
+   * @param {string} dateString - La chaîne de date à formater.
+   * @returns {string} La date formatée en français ou un message d'erreur si la date n'est pas valide.
+   */
 
   const formatDateToFrench = (dateString) => {
     if (!dateString) return "Non renseigné";

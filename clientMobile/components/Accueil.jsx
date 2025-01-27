@@ -1,3 +1,9 @@
+/**
+ * @file Accueil.js
+ * @description Composant principal pour afficher la page d'accueil.
+ * Récupère les billets réservés par l'utilisateur connecté et les affiche sous forme de liste.
+ */
+
 import React, { useContext, useEffect, useState } from "react";
 import {
   View,
@@ -24,24 +30,47 @@ import {
 } from "@expo-google-fonts/raleway";
 import { ThemeContext } from "../ThemeContext";
 
-export default function Accueil() {
-  const { isDarkMode, toggleTheme } = useContext(ThemeContext);
-  const { user } = useContext(UserContext);
-  const [tickets, setTickets] = useState([]);
-  const [loading, setLoading] = useState(false);
+/**
+ * @typedef {Object} Ticket
+ * @property {number} num_reservation - Numéro de réservation unique du billet.
+ * @property {string} lieu_depart - Lieu de départ du voyage.
+ * @property {string} lieu_arrivee - Lieu d'arrivée du voyage.
+ * @property {Date} heure_depart - Heure de départ prévue.
+ * @property {Date} heure_arrivee - Heure d'arrivée prévue.
+ */
 
+/**
+ * @function Accueil
+ * @description Affiche les billets réservés pour l'utilisateur connecté.
+ *
+ * @returns {JSX.Element} Composant affichant la liste des billets.
+ */
+
+export default function Accueil() {
+  const { isDarkMode, toggleTheme } = useContext(ThemeContext); // Contexte pour le thème
+  const { user } = useContext(UserContext); // Contexte pour l'utilisateur connecté
+  const [tickets, setTickets] = useState([]); // Liste des billets
+  const [loading, setLoading] = useState(false); // Indicateur de chargement
+
+  /**
+   * @function fetchTickets
+   * @description Récupère les billets via une API en fonction de l'utilisateur connecté.
+   * Met à jour l'état des billets et de l'indicateur de chargement.
+   *
+   * @async
+   * @returns {Promise<void>}
+   */
   useEffect(() => {
     const fetchTickets = async () => {
       setLoading(true);
       setTickets([]);
       if (user) {
-        setLoading(true);
         try {
           const fetchedTickets = await getTickets(user.name, user.surname);
           setTickets(fetchedTickets);
         } catch (error) {
           console.error("Erreur lors de la récupération des billets :", error);
-          setTickets([]); // Définit un tableau vide en cas d'erreur
+          setTickets([]);
         } finally {
           setLoading(false);
         }
@@ -51,6 +80,7 @@ export default function Accueil() {
     fetchTickets();
   }, [user]);
 
+  // Chargement des polices Raleway via Expo
   useFonts({
     RalewayRegular: Raleway_400Regular,
     RalewayBold: Raleway_700Bold,
