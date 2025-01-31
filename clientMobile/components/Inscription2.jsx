@@ -7,7 +7,8 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-const API_BASE_URL = "http://10.10.7.236:3000";
+
+const API_BASE_URL = "http://172.20.10.2:3000";
 
 export default function Inscription2({ navigation }) {
   const [showAccompagnateurFields, setShowAccompagnateurFields] =

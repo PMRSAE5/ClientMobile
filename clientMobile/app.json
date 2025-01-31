@@ -1,19 +1,31 @@
 {
   "expo": {
-    "name": "clientMobile",
+    "name": "PMove",
     "slug": "clientMobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/PMoveLogoSANSTITRE.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "permissions": [
+      "CAMERA",
+      "CAMERA_ROLL",
+      "READ_EXTERNAL_STORAGE",
+      "WRITE_EXTERNAL_STORAGE"
+    ],
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/PMoveLogoSANSTITRE.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Nous avons besoin de votre permission pour accéder à la bibliothèque photo.",
+        "NSCameraUsageDescription": "Nous avons besoin de votre permission pour accéder à la caméra.",
+        "NSPhotoLibraryAddUsageDescription": "Nous avons besoin de votre permission pour enregistrer des photos."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -21,8 +33,7 @@
         "backgroundColor": "#ffffff"
       }
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
+
+    "plugins": ["expo-font"]
   }
 }
