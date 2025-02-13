@@ -134,7 +134,11 @@ const NavBar = () => {
 
         {[
           { name: "home", label: "Accueil", route: "Accueil" },
-          { name: "plus-circle", label: "Réserver", route: "Reservation" },
+          {
+            name: "plus-circle",
+            label: "Enregistrement",
+            route: "Reservation",
+          },
           { name: "user-circle", label: "Profile", route: "Profile" },
           { name: "cogs", label: "Paramètres", route: "Settings" },
         ].map((item, index) => (

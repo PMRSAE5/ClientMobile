@@ -28,6 +28,7 @@ import {
   Raleway_800ExtraBold,
   Raleway_900Black,
 } from "@expo-google-fonts/raleway";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * Composant Connexion.
@@ -70,40 +71,33 @@ export default function Connexion({ navigation, onLoginSuccess }) {
    */
 
   const handleLogin = async () => {
-    console.log("Début de la méthode handleLogin.");
-
     if (!mail || !password) {
       Alert.alert("Erreur", "Veuillez remplir tous les champs.");
       return;
     }
 
     try {
-      console.log("Envoi des données au serveur :", { mail, password });
-
       const result = await login(mail, password);
-      console.log("Résultat brut de l'API :", result);
-
       if (!result.user) {
-        console.log("Réponse API sans utilisateur :", result);
         throw new Error(result.error || "Données utilisateur non disponibles.");
       }
 
       // Met à jour le contexte utilisateur
       setUser(result.user);
-      console.log("Utilisateur trouvé :", result.user);
-      console.log("Utilisateur mis à jour dans le contexte :", result.user);
 
-      // Succès
+      // **Sauvegarde l'utilisateur complet dans AsyncStorage**
+      await AsyncStorage.setItem("user", JSON.stringify(result.user));
+
+      // Sauvegarde aussi l'état de connexion
+      await AsyncStorage.setItem("isLoggedIn", "true");
+
       Alert.alert("Succès", `Bienvenue, ${result.user.name || "Utilisateur"}!`);
 
-      // Appelle onLoginSuccess si défini
       if (onLoginSuccess) {
-        console.log("Appel de onLoginSuccess...");
-        onLoginSuccess();
+        onLoginSuccess(result.user); // Passe l'utilisateur à App.js
       }
 
-      console.log("Redirection vers la page Accueil...");
-      navigation.navigate("Accueil"); // Navigue vers "Accueil"
+      navigation.replace("Accueil"); // Navigue vers Accueil
     } catch (error) {
       console.error("Erreur lors de la connexion :", error);
       Alert.alert("Erreur", error.message || "Échec de la connexion.");

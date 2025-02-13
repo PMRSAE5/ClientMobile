@@ -106,13 +106,13 @@ export default function Accueil() {
             loop
             style={styles.animation}
           />
-          <Text style={styles.subtitle}>Vos Réservations :</Text>
+          <Text style={styles.subtitle}>Vos Enregistrement :</Text>
         </View>
       }
       ListEmptyComponent={
         !loading && (
           <View style={styles.emptyContainer}>
-            <Text style={styles.noTickets}>Aucune réservation faite.</Text>
+            <Text style={styles.noTickets}>Aucun enregistrement fait...</Text>
           </View>
         )
       }

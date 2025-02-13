@@ -117,7 +117,7 @@ export default function Reservation() {
         selectedTransport
       );
       Alert.alert("Succès", "Réservation trouvée !");
-      // Masquer le clavier
+
       Keyboard.dismiss();
       setBillet(response.reservation); // Stocke les informations du billet
     } catch (error) {

@@ -269,7 +269,7 @@ const BilletDetails = ({ route }) => {
       </View>
 
       <View style={styles.qrContainer}>
-        <Text style={styles.qrLabel}>QR Code de la Réservation :</Text>
+        <Text style={styles.qrLabel}>QR Code de l'enregistrement :</Text>
         <QRCode value={qrData} size={200} />
       </View>
 
@@ -277,7 +277,7 @@ const BilletDetails = ({ route }) => {
         style={styles.deleteButton}
         onPress={handleDeleteReservation}
       >
-        <Text style={styles.deleteButtonText}>Supprimer la Réservation</Text>
+        <Text style={styles.deleteButtonText}>Supprimer l'enregistrement</Text>
       </TouchableOpacity>
     </ScrollView>
   );
