@@ -67,7 +67,37 @@ export default function Accueil() {
       if (user) {
         try {
           const fetchedTickets = await getTickets(user.name, user.surname);
-          setTickets(fetchedTickets);
+
+          // 🔥 Transformation pour créer un billet distinct par réservation 🔥
+          const transformedTickets = fetchedTickets.flatMap((billet) => {
+            return Object.keys(billet)
+              .filter((key) => key.startsWith("num_reservation")) // On prend toutes les réservations existantes
+              .map((key) => {
+                const index = key.replace("num_reservation", ""); // Ex: "2", "3", etc.
+                return {
+                  num_reservation: billet[key], // Numéro de réservation
+                  lieu_depart:
+                    billet[`lieu_depart${index}`] || billet.lieu_depart,
+                  lieu_arrivee:
+                    billet[`lieu_arrivee${index}`] || billet.lieu_arrivee,
+                  heure_depart:
+                    billet[`heure_depart${index}`] || billet.heure_depart,
+                  heure_arrivee:
+                    billet[`heure_arrivee${index}`] || billet.heure_arrivee,
+                  transport: billet[`transport${index}`] || billet.transport,
+                  name: billet.name,
+                  surname: billet.surname,
+                  companion: billet.companion,
+                  wheelchair: billet.wheelchair,
+                  phone: billet.phone,
+                  email: billet.email,
+                  numBags: billet.numBags,
+                  additionalInfo: billet.additionalInfo,
+                };
+              });
+          });
+
+          setTickets(transformedTickets);
         } catch (error) {
           console.error("Erreur lors de la récupération des billets :", error);
           setTickets([]);

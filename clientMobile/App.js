@@ -24,6 +24,7 @@ import BilletDetails from "./components/BilletDetails.jsx";
 import { ThemeProvider, ThemeContext } from "./ThemeContext";
 import EditProfile from "./components/EditProfile.jsx";
 import Confidentialite from "./components/Confidentialite.jsx";
+import AjoutTrajet from "./components/AjoutTrajet.jsx";
 
 const Stack = createStackNavigator();
 
@@ -163,6 +164,11 @@ export default function App() {
                 <Stack.Screen
                   name="Reservation3"
                   component={Reservation3}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="AjoutTrajet"
+                  component={AjoutTrajet}
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
