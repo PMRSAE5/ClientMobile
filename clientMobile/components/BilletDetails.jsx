@@ -272,13 +272,6 @@ const BilletDetails = ({ route }) => {
         <Text style={styles.qrLabel}>QR Code de l'enregistrement :</Text>
         <QRCode value={qrData} size={200} />
       </View>
-
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={handleDeleteReservation}
-      >
-        <Text style={styles.deleteButtonText}>Supprimer l'enregistrement</Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -386,19 +379,7 @@ const styles = StyleSheet.create({
     color: "#333",
     marginBottom: 10,
   },
-  deleteButton: {
-    backgroundColor: "#e53935",
-    paddingVertical: 15,
-    borderRadius: 10,
-    marginTop: 20,
-    alignItems: "center",
-    width: "100%",
-  },
-  deleteButtonText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#fff",
-  },
+
   errorContainer: {
     flex: 1,
     justifyContent: "center",

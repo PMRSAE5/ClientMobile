@@ -91,33 +91,6 @@ const Reservation3 = ({ route, navigation }) => {
   console.log("Billet :", billet);
 
   console.log("Utilisateur :", user);
-
-  /**
-   * Données pour le QR code global.
-   * Contient les informations principales de la réservation, y compris les informations utilisateur,
-   * les détails du billet, le nombre de bagages, et les options liées au fauteuil roulant.
-   *
-   * @constant
-   * @type {string}
-   */
-  const qrData = `https://pmrsae5.github.io/PageQRCode/?nom=${encodeURIComponent(
-    user?.name || "Non renseigné"
-  )}&prenom=${encodeURIComponent(
-    user?.surname || "Non renseigné"
-  )}&reservation=${encodeURIComponent(
-    billet?.num_reservation || "Non renseigné"
-  )}&depart=${encodeURIComponent(
-    billet?.lieu_depart || "Non renseigné"
-  )}&arrivee=${encodeURIComponent(
-    billet?.lieu_arrivee || "Non renseigné"
-  )}&bagages=${encodeURIComponent(
-    billet?.numBags || "0"
-  )}&fauteuilRoulant=${encodeURIComponent(
-    Object.keys(billet?.wheelchair || {})
-      .filter((key) => billet?.wheelchair[key])
-      .join(", ") || "Non"
-  )}`;
-
   /**
    * Fonction handleConfirm.
    * Envoie les données de la réservation (billet, utilisateur, etc.) à un serveur Redis via une API.
@@ -178,7 +151,7 @@ const Reservation3 = ({ route, navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.scrollContent}>
       <View style={styles.container}>
-        <Text style={styles.title}>Résumé de votre Réservation</Text>
+        <Text style={styles.title}>Résumé de votre Enregistrement </Text>
         <Text style={styles.titlesection}>Profile </Text>
         <View style={styles.section}>
           <Text style={styles.label}>Nom :</Text>
@@ -190,7 +163,7 @@ const Reservation3 = ({ route, navigation }) => {
           <Text style={styles.label}>Prénom :</Text>
           <Text style={styles.value}>{user?.mail || "Non renseigné"}</Text>
         </View>
-        <Text style={styles.titlesection}>Détails de la réservation</Text>
+        <Text style={styles.titlesection}>Détails de l'enregistrement</Text>
         {/* Détails du billet */}
         <View style={styles.section}>
           <Text style={styles.label}>Numéro de Réservation :</Text>
@@ -219,7 +192,7 @@ const Reservation3 = ({ route, navigation }) => {
               <View key={numIndex} style={{ marginBottom: 10 }}>
                 {/* Titre de la réservation placé en dehors du rectangle */}
                 <Text style={styles.titlesection}>
-                  Détails de Réservation {numIndex}
+                  Détails de l'enregistrement {numIndex}
                 </Text>
 
                 {/* Rectangle contenant les infos de la réservation */}
@@ -271,7 +244,7 @@ const Reservation3 = ({ route, navigation }) => {
           <Text style={styles.label}>
             {billet.hasCompanion
               ? "Voici votre accompagnateur "
-              : "Pas d'accompagnateur pour votre réservation"}
+              : "Pas d'accompagnateur pour votre trajet"}
           </Text>
           {billet.hasCompanion && (
             <>
@@ -322,10 +295,6 @@ const Reservation3 = ({ route, navigation }) => {
             ))}
           </View>
         )}
-        <View style={styles.qrSection}>
-          <Text style={styles.label}>QR Code :</Text>
-          <QRCode value={qrData} size={200} />
-        </View>
 
         <TouchableOpacity
           style={styles.addTripButton}
