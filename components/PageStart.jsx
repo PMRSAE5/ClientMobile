@@ -4,9 +4,15 @@
  */
 
 import React, { useRef, useEffect } from "react";
-import { View, StyleSheet, Animated, Easing } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Animated,
+  Easing,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Text, Button } from "react-native-paper";
 import {
   useFonts,
   Raleway_100Thin,
@@ -89,24 +95,19 @@ export default function PageStart({ navigation }) {
         </Text>
 
         {/* Boutons */}
-        <Button
-          mode="contained"
-          onPress={() => navigation.navigate("Login")}
+        <TouchableOpacity
           style={styles.buttonPrimary}
-          labelStyle={[styles.buttonTextPrimary]}
-          contentStyle={styles.buttonContent}
+          onPress={() => navigation.navigate("Login")}
         >
-          Se connecter
-        </Button>
-        <Button
-          mode="outlined"
-          onPress={() => navigation.navigate("Signup")}
+          <Text style={styles.buttonTextPrimary}>Se connecter</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           style={styles.buttonSecondary}
-          labelStyle={[styles.buttonTextSecondary]}
-          contentStyle={styles.buttonContent}
+          onPress={() => navigation.navigate("Signup")}
         >
-          S'inscrire
-        </Button>
+          <Text style={styles.buttonTextSecondary}>S'inscrire</Text>
+        </TouchableOpacity>
       </View>
     </LinearGradient>
   );
@@ -157,9 +158,12 @@ const styles = StyleSheet.create({
   },
   buttonPrimary: {
     backgroundColor: "#5895d6",
-    marginBottom: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     borderRadius: 8,
-    width: "100%",
+    width: "80%",
+    alignItems: "center",
+    marginBottom: 10,
   },
   buttonTextPrimary: {
     fontFamily: "RalewayExtraBold",
@@ -171,17 +175,16 @@ const styles = StyleSheet.create({
     borderColor: "#ffffff",
     borderWidth: 1,
     borderRadius: 8,
-    width: "100%",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    width: "80%",
+    alignItems: "center",
   },
   buttonTextSecondary: {
     fontFamily: "RalewayBold",
     color: "#ffffff",
     fontSize: 16,
     fontWeight: "bold",
-  },
-  buttonContent: {
-    height: 50,
-    justifyContent: "center",
   },
   loadingScreen: {
     flex: 1,
