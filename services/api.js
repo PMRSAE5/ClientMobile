@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://172.20.10.2:3000";
+const API_BASE_URL = "http://13.60.153.228:3000";
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -173,7 +173,7 @@ export const update = async (updatedData) => {
 export const sendConfirmationEmail = async (email, subject, message) => {
   try {
     const response = await axios.post(
-      "http://172.20.10.2:3000/reservation/sendConfirmationEmail",
+      "http://13.60.153.228:3000/reservation/sendConfirmationEmail",
       {
         email,
         subject,
