@@ -11,6 +11,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   FlatList,
+  Linking,
+  TouchableOpacity,
 } from "react-native";
 import { UserContext } from "../UserContext";
 import LottieView from "lottie-react-native";
@@ -118,6 +120,13 @@ export default function Accueil() {
     RalewayBlack: Raleway_900Black,
   });
 
+  const handleCall = () => {
+    const phoneNumber = "tel:+33766871619"; // Remplace par un numéro valide
+    Linking.openURL(phoneNumber).catch((err) =>
+      console.error("Erreur d'appel", err)
+    );
+  };
+
   return (
     <FlatList
       data={tickets}
@@ -137,6 +146,9 @@ export default function Accueil() {
             style={styles.animation}
           />
           <Text style={styles.subtitle}>Vos Enregistrement :</Text>
+          <TouchableOpacity style={styles.callButton} onPress={handleCall}>
+            <Text style={styles.buttonText}>📞</Text>
+          </TouchableOpacity>
         </View>
       }
       ListEmptyComponent={
@@ -206,5 +218,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#999",
     textAlign: "center",
+  },
+  // Style pour le bouton d'appel
+  callButton: {
+    position: "absolute",
+    bottom: 30,
+    right: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#FFB6C1", // Rouge pastel
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  buttonText: {
+    fontSize: 30,
+    color: "#fff",
   },
 });
