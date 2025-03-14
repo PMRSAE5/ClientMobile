@@ -45,7 +45,7 @@ import { useNavigation } from "@react-navigation/native";
  * @returns {JSX.Element} Le composant Inscription.
  */
 
-const API_BASE_URL = "http://172.20.10.2:3000";
+const API_BASE_URL = "http://13.60.153.228:3000";
 
 export default function Inscription({ navigation }) {
   const [formData, setFormData] = useState({
