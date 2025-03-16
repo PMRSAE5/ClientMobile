@@ -21,8 +21,9 @@
       }
     },
     "android": {
+      "permissions": ["INTERNET", "ACCESS_NETWORK_STATE"],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/PMoveLogoSANSTITRE.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.kaisdk.clientmobile"
