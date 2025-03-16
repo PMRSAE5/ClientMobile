@@ -118,7 +118,7 @@ const Reservation3 = ({ route, navigation }) => {
       );
 
       const response = await fetch(
-        "http://172.20.10.2:3000/reservation/addToRedis",
+        "http://13.60.153.228:3000/reservation/addToRedis",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
