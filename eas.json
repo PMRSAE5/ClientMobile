@@ -6,6 +6,11 @@
     },
     "production": {
       "channel": "production"
+    },
+    "preview": {
+      "android": {
+        "buildType": "apk"
+      }
     }
   }
 }
